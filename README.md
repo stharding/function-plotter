@@ -33,6 +33,15 @@ wheel zooms into our out of the 3d plot.
 The plotter consists primarily of a canvas area, a color function
 editor, a helper function editor, and an expression editor.
 
+**NOTE**: Each of the editable areas will end up modifying the fragment shader.
+as such, all of the `GLSL` language is available to implement these functions.
+On the other hand, the user is also limited by the `GLSL` language
+peculiarities. For example, `GLSL` provides no implicit casting of numeric
+literals. e.g. the following expression will cause a compilation error:
+`1 + 1.0`! Since almost all of the builtin `GLSL` functions take `float` typed
+input, it is probably best to avoid `int` variables and integer constants.
+
+
 ##### Color function: #####
 
 A `GLSL` function named `getcolor()` must be defined. The following definition
@@ -43,15 +52,85 @@ vec4 getcolor(float z)
 {
   float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
   float g = z     > 1.0 ? 1.0 / (z * z) : z;
-  float b = z     > 1.0 ? 1.0 / z       : z * z;
+  float b = z     > 1.0 ? 1.0 /  z      : z * z;
   return vec4(r, g, b, 1.0);
 }
 ```
+##### Helper function(s): #####
 
-NOTE: The default implementation of `getcolor()` is in a user editable text
-area. All of the `GLSL` language is available to implement this function. On
-the other hand, the user is also limited by the `GLSL` language peculiarities.
-For example, `GLSL` provides no implicit casting of numeric literals. e.g. the
-following expression will cause a compilation error: `1 + 1.0`! Since almost
-all of the builtin `GLSL` functions take `float` typed input, it is probably
-best to avoid `int` variables and integer constants.
+An editor is provided so that the user can implement any helper functions they
+would like for use in the expression evaluator area. This allows for the use
+of functions above and beyond the builtin `GLSL` functions. See the example
+section for some interesting uses of the helper function editor.
+
+##### Expression Editor: #####
+
+An editor box is provided so the user can input an expression to be plotted.
+the expression _must_ be in terms of the (internally declared) variables `x` and
+`y`. A default expression is provided:
+```java
+sin( x*x + y*y )
+```
+However, the user is encouraged to change this expression and plot more interesting
+functions.
+
+### How it works: ###
+
+### Examples: ###
+
+```java
+vec4 getcolor(float z)
+{
+  if (z == MAX - 1.0) return vec4( 0,0,0,1 );
+  z = z/MAX;
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
+  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
+  else return vec4(r, g, b, 1.0);
+}
+```
+
+```java
+#define MAX 100.0
+float mandelbrot(float fx, float fy) {
+  float iteration  = 0.0;
+  float x          = 0.0;
+  float y          = 0.0;
+  float xtemp      = 0.0;
+
+  for ( float i = 0.0; i < MAX; ++i  )
+  {
+    if ( sqrt(x * x + y * y) <= 4.0 ) {
+      xtemp = x * x - y * y + fx;
+      y = 2.0 * x * y + fy;
+      x = xtemp;
+      iteration = i;
+    }
+    else{ break; }
+  }
+  return iteration;
+}
+```
+
+```java
+#define MAX 100.0
+float julia( float x, float y ) {
+  float newRe = x;
+  float newIm = y;
+  float oldRe, oldIm, cRe, cIm;
+  cRe = -0.7;
+  cIm = 0.27015;
+  float z = 0.0;
+  for(float i = 0.0; i < max; i++)
+  {
+    oldRe = newRe;
+    oldIm = newIm;
+    newRe = oldRe * oldRe - oldIm * oldIm + cRe;
+    newIm = 2.0 * oldRe * oldIm + cIm;
+    if((newRe * newRe + newIm * newIm) > 4.0) break;
+    z = i;
+  }
+  return z;
+}
+```
