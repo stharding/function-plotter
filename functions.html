@@ -34,42 +34,41 @@
 
     In 2d mode, the user specified function of x and y will be plotted. The
     output value of the function is output as a 'heat map'. Specifically, the
-   
-    (user modifiable) <tt>getcolor()</tt> function determines the color for a 
+
+    (user modifiable) <tt>getcolor()</tt> function determines the color for a
     z-value. The user can use the mouse wheel to 'zoom' in and out and click
     and drag to pan and zoom (this is nothing  more than specifying the dom
     in
     of the function). Additionally, the arrow keys will pan and the up and
     down arrow keys will also zoom if the shift key is pressed.<p></p>
 
-   
     Once the user has set the function to be plotted and is satisfied with the
     bounds and the coloring the function can be plotted in 3d. The actual z
     value of the function is computed for each pixel. Vertices correspondin
     to each pixel in the canvas are generated and the image that was rendered
     in 2d mode is used as a texture to shade the vertices. <p></p>
 
-    In 3d mode, there are a couple more options to be aware of: render mode, 
+    In 3d mode, there are a couple more options to be aware of: render mode,
     and normalize mode. There are two render modes. The first is triangle-
-    strip mode which will render function as a solid surface. The second is 
-    point-mode where each vertex is simply rendered as a point. This often 
+    strip mode which will render function as a solid surface. The second is
+    point-mode where each vertex is simply rendered as a point. This often
     gives the impression of a mesh. <p></p>
 
-    3d mouse interaction is as follows: Clicking and dragging will rotate the 
-    plot in the direction of the drag (along the x and y axis). The plot can 
-    be moved up and down  by holding the shift key and dragging the mouse up 
-    and down. The plot can be rotated on the z-axis by holding the shift key 
+    3d mouse interaction is as follows: Clicking and dragging will rotate the
+    plot in the direction of the drag (along the x and y axis). The plot can
+    be moved up and down  by holding the shift key and dragging the mouse up
+    and down. The plot can be rotated on the z-axis by holding the shift key
     while clicking and dragging left or right. <p></p>
 
-    This plotter is extremely versatile and can plot absolutely any function 
-    of x and y. In fact the only limitation is inherent in the name 
-    'function'. That is to say that this plotter can only plot functions in 
-    the mathematical sense that a function can have only one output for a 
-    given input. This means that you cannot plot spheres or cubes etc. To 
-    demonstrate the versatility of this plotter, the following code is 
-    provided to plot the mandelbrot set and the julia set. Just copy and paste 
+    This plotter is extremely versatile and can plot absolutely any function
+    of x and y. In fact the only limitation is inherent in the name
+    'function'. That is to say that this plotter can only plot functions in
+    the mathematical sense that a function can have only one output for a
+    given input. This means that you cannot plot spheres or cubes etc. To
+    demonstrate the versatility of this plotter, the following code is
+    provided to plot the mandelbrot set and the julia set. Just copy and paste
     the <tt>getcolor()</tt> function into the color function area and the <tt>
-    mandelbrot()</tt> or <tt>julia()</tt> into the helper function area. Then 
+    mandelbrot()</tt> or <tt>julia()</tt> into the helper function area. Then
     put <tt>mandelbrot(x,y)</tt> into the expression area.
 
 
@@ -79,9 +78,9 @@ vec4 getcolor(float z)
 {
   if (z == MAX - 1.0) return vec4( 0,0,0,1 );
   z = z/MAX;
-  float r = z + z > 1.0 ? 1.0 / z              : z + z;
-  float g = z     > 1.0 ? 1.0 / z              : z;
-  float b = z     > 1.0 ? 1.0 / (z * fract(z)) : z * z;
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
   if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
   else return vec4(r, g, b, 1.0);
 }
@@ -132,9 +131,9 @@ float julia( float x, float y ) {
       <pre class="editor" id="clr_input" style="height: 200px">
 vec4 getcolor(float z)
 {
-  float r = z + z > 1.0 ? 1.0 / z              : z + z;
-  float g = z     > 1.0 ? 1.0 / z              : z;
-  float b = z     > 1.0 ? 1.0 / (z * fract(z)) : z * z;
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
   if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
   else return vec4(r, g, b, 1.0);
 }</pre>
@@ -180,12 +179,8 @@ sin( x*x + y*y )
     </div>
   </div>
 
-
-
-
 <script src="Common/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type = "text/javascript" src = "functions.js"></script>
-
 
 </body>
 </html>
