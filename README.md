@@ -32,3 +32,26 @@ wheel zooms into our out of the 3d plot.
 
 The plotter consists primarily of a canvas area, a color function
 editor, a helper function editor, and an expression editor.
+
+##### Color function: #####
+
+A `GLSL` function named `getcolor()` must be defined. The following definition
+is provided as a default:
+
+```java
+vec4 getcolor(float z)
+{
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
+  return vec4(r, g, b, 1.0);
+}
+```
+
+NOTE: The default implementation of `getcolor()` is in a user editable text
+area. All of the `GLSL` language is available to implement this function. On
+the other hand, the user is also limited by the `GLSL` language peculiarities.
+For example, `GLSL` provides no implicit casting of numeric literals. e.g. the
+following expression will cause a compilation error: `1 + 1.0`! Since almost
+all of the builtin `GLSL` functions take `float` typed input, it is probably
+best to avoid `int` variables and integer constants.
