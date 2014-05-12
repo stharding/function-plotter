@@ -239,7 +239,6 @@ function handle_on_key_down( e )
       /* dn */ case 40: d_pressed  = true; handle_down  ( e ); return false;
       /* lf */ case 39: r_pressed  = true; handle_right ( e ); return false;
       /* rt */ case 37: l_pressed  = true; handle_left  ( e ); return false;
-      /*  h */ case 72: hslMode = !hslMode; gl.uniform1i( hslPosition , hslMode ); render(); break;
     }
   }
 }
@@ -407,7 +406,8 @@ function set_function( compile )
 
   var cfn = compile ? clr_editor.getValue() : color_fn_to_float;
   var f_shader = header + hlpr_editor.getValue() + frag_shader_start_1 +
-                 cfn + frag_shader_start_2 + expr_editor.getValue() + frag_shader_end;
+                 cfn + frag_shader_start_2 + expr_editor.getValue() + 
+                 frag_shader_end;
 
   set_fShader( f_shader );
   // Load shaders and initialize attribute buffers
@@ -439,77 +439,66 @@ function setWindow()
   maxY_label.value = maxY
 }
 
-var header = "                                                                 \n\
-#ifdef GL_FRAGMENT_PRECISION_HIGH                                              \n\
-precision highp float;                                                         \n\
-#else                                                                          \n\
-precision mediump float;                                                       \n\
-#endif                                                                         \n\
-                                                                               \n\
-uniform float     cx;                                                          \n\
-uniform float     cy;                                                          \n\
-uniform float     minX;                                                        \n\
-uniform float     maxX;                                                        \n\
-uniform float     minY;                                                        \n\
-uniform float     width;                                                       \n\
-uniform int       hslMode;                                                     \n\
-uniform int       use_tex;                                                     \n\
-uniform sampler2D texture;                                                     \n\
-varying vec2      fTexCoord;                                                   \n\
+var header = "                                                               \n\
+#ifdef GL_FRAGMENT_PRECISION_HIGH                                            \n\
+precision highp float;                                                       \n\
+#else                                                                        \n\
+precision mediump float;                                                     \n\
+#endif                                                                       \n\
+                                                                             \n\
+uniform float     cx;                                                        \n\
+uniform float     cy;                                                        \n\
+uniform float     minX;                                                      \n\
+uniform float     maxX;                                                      \n\
+uniform float     minY;                                                      \n\
+uniform float     width;                                                     \n\
+uniform int       hslMode;                                                   \n\
+uniform int       use_tex;                                                   \n\
+uniform sampler2D texture;                                                   \n\
+varying vec2      fTexCoord;                                                 \n\
 ";
-var frag_shader_start_1 = "                                                    \n\
-vec4 hsvToRgb(float h, float s, float v)                                       \n\
-{                                                                              \n\
-    float r, g, b;                                                             \n\
-                                                                               \n\
-    float i = floor(h * 6.0);                                                  \n\
-    float f = h * 6.0 - i;                                                     \n\
-    float p = v * (1.0 - s);                                                   \n\
-    float q = v * (1.0 - f * s);                                               \n\
-    float t = v * (1.0 - (1.0 - f) * s);                                       \n\
-    float j = mod(i, 6.0);                                                     \n\
-                                                                               \n\
-    if ( j == 0.0 ) return vec4( v, t, p, 1.0 );                               \n\
-    if ( j == 1.0 ) return vec4( q, v, p, 1.0 );                               \n\
-    if ( j == 2.0 ) return vec4( p, v, t, 1.0 );                               \n\
-    if ( j == 3.0 ) return vec4( p, q, v, 1.0 );                               \n\
-    if ( j == 4.0 ) return vec4( t, p, v, 1.0 );                               \n\
-    if ( j == 5.0 ) return vec4( v, p, q, 1.0 );                               \n\
-                                                                               \n\
-    return vec4( 1.0, 1.0, 1.0, 1.0 );                                         \n\
-}                                                                              \n\
-                                                                               \n\
+var frag_shader_start_1 = "                                                  \n\
+vec4 hsvToRgb(float h, float s, float v)                                     \n\
+{                                                                            \n\
+    float r, g, b;                                                           \n\
+                                                                             \n\
+    float i = floor(h * 6.0);                                                \n\
+    float f = h * 6.0 - i;                                                   \n\
+    float p = v * (1.0 - s);                                                 \n\
+    float q = v * (1.0 - f * s);                                             \n\
+    float t = v * (1.0 - (1.0 - f) * s);                                     \n\
+    float j = mod(i, 6.0);                                                   \n\
+                                                                             \n\
+    if ( j == 0.0 ) return vec4( v, t, p, 1.0 );                             \n\
+    if ( j == 1.0 ) return vec4( q, v, p, 1.0 );                             \n\
+    if ( j == 2.0 ) return vec4( p, v, t, 1.0 );                             \n\
+    if ( j == 3.0 ) return vec4( p, q, v, 1.0 );                             \n\
+    if ( j == 4.0 ) return vec4( t, p, v, 1.0 );                             \n\
+    if ( j == 5.0 ) return vec4( v, p, q, 1.0 );                             \n\
+                                                                             \n\
+    return vec4( 1.0, 1.0, 1.0, 1.0 );                                       \n\
+}                                                                            \n\
+                                                                             \n\
 ";
-var frag_shader_start_2 = "                                                    \n\
-void main()                                                                    \n\
-{                                                                              \n\
-  if ( use_tex == 1 ) gl_FragColor = texture2D( texture, fTexCoord );          \n\
-  else {                                                                       \n\
-    float ccx = cx;                                                            \n\
-    float ccy = cy;                                                            \n\
-                                                                               \n\
-    float current_scale = (maxX - minX) / width;                               \n\
-                                                                               \n\
-    // int iteration = 0;                                                      \n\
-    float x       = (gl_FragCoord.x * current_scale) + minX;                   \n\
-    float y       = (gl_FragCoord.y * current_scale) + minY;                   \n\
-    float _z_     =                                                              \
+var frag_shader_start_2 = "                                                  \n\
+void main()                                                                  \n\
+{                                                                            \n\
+  if ( use_tex == 1 ) gl_FragColor = texture2D( texture, fTexCoord );        \n\
+  else {                                                                     \n\
+    float ccx = cx;                                                          \n\
+    float ccy = cy;                                                          \n\
+                                                                             \n\
+    float current_scale = (maxX - minX) / width;                             \n\
+                                                                             \n\
+    // int iteration = 0;                                                    \n\
+    float x       = (gl_FragCoord.x * current_scale) + minX;                 \n\
+    float y       = (gl_FragCoord.y * current_scale) + minY;                 \n\
+    float _z_     =                                                            \
 ";
-var frag_shader_end = "\n;                                                     \n\
-    gl_FragColor=( getcolor(_z_));                                             \n\
-  }                                                                            \n\
+var frag_shader_end = "\n;                                                   \n\
+    gl_FragColor=( getcolor(_z_));                                           \n\
+  }                                                                          \n\
 }"
-
-var color_fn = "                                                               \n\
-vec4 getcolor(float z)                                                         \n\
-{                                                                              \n\
-  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;                               \n\
-  float g = z     > 1.0 ? 1.0 / (z * z) : z;                                   \n\
-  float b = z * z > 1.0 ? 1.0 /  z      : z * z;                               \n\
-  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );                          \n\
-  else return vec4(r, g, b, 1.0);                                              \n\
-}                                                                              \n\
-"
 
 /*
  *  A `color function' which is not intended to be used to render colors.
@@ -522,38 +511,38 @@ vec4 getcolor(float z)                                                         \
  *  NOTE: THIS IS NOT MY CODE!!! This code is copied verbatim from StackOverflow:
  *   http://stackoverflow.com/questions/17981163/webgl-read-pixels-from-floating-point-render-target
  */
-var color_fn_to_float = "                                                      \n\
-float shift_right (float v, float amt) {                                       \n\
-    v = floor(v) + 0.5;                                                        \n\
-    return floor(v / exp2(amt));                                               \n\
-}                                                                              \n\
-float shift_left (float v, float amt) {                                        \n\
-    return floor(v * exp2(amt) + 0.5);                                         \n\
-}                                                                              \n\
-float mask_last (float v, float bits) {                                        \n\
-    return mod(v, shift_left(1.0, bits));                                      \n\
-}                                                                              \n\
-float extract_bits (float num, float from, float to) {                         \n\
-    from = floor(from + 0.5); to = floor(to + 0.5);                            \n\
-    return mask_last(shift_right(num, from), to - from);                       \n\
-}                                                                              \n\
-vec4 getcolor (float val) {                                                    \n\
-   if (val == 0.0) return vec4(0, 0, 0, 0);                                    \n\
-   float sign = val > 0.0 ? 0.0 : 1.0;                                         \n\
-   val = abs(val);                                                             \n\
-   float exponent = floor(log2(val));                                          \n\
-   float biased_exponent = exponent + 127.0;                                   \n\
-   float fraction = ((val / exp2(exponent)) - 1.0) * 8388608.0;                \n\
-   float t = biased_exponent / 2.0;                                            \n\
-   float last_bit_of_biased_exponent = fract(t) * 2.0;                         \n\
-   float remaining_bits_of_biased_exponent = floor(t);                         \n\
-   float byte4 = extract_bits(fraction, 0.0, 8.0) / 255.0;                     \n\
-   float byte3 = extract_bits(fraction, 8.0, 16.0) / 255.0;                    \n\
-   float byte2 = (last_bit_of_biased_exponent * 128.0 +                        \n\
-                  extract_bits(fraction, 16.0, 23.0)) / 255.0;                 \n\
-   float byte1 = (sign * 128.0 + remaining_bits_of_biased_exponent) / 255.0;   \n\
-   return vec4(byte4, byte3, byte2, byte1);                                    \n\
-}                                                                              \n\
+var color_fn_to_float = "                                                    \n\
+float shift_right (float v, float amt) {                                     \n\
+    v = floor(v) + 0.5;                                                      \n\
+    return floor(v / exp2(amt));                                             \n\
+}                                                                            \n\
+float shift_left (float v, float amt) {                                      \n\
+    return floor(v * exp2(amt) + 0.5);                                       \n\
+}                                                                            \n\
+float mask_last (float v, float bits) {                                      \n\
+    return mod(v, shift_left(1.0, bits));                                    \n\
+}                                                                            \n\
+float extract_bits (float num, float from, float to) {                       \n\
+    from = floor(from + 0.5); to = floor(to + 0.5);                          \n\
+    return mask_last(shift_right(num, from), to - from);                     \n\
+}                                                                            \n\
+vec4 getcolor (float val) {                                                  \n\
+   if (val == 0.0) return vec4(0, 0, 0, 0);                                  \n\
+   float sign = val > 0.0 ? 0.0 : 1.0;                                       \n\
+   val = abs(val);                                                           \n\
+   float exponent = floor(log2(val));                                        \n\
+   float biased_exponent = exponent + 127.0;                                 \n\
+   float fraction = ((val / exp2(exponent)) - 1.0) * 8388608.0;              \n\
+   float t = biased_exponent / 2.0;                                          \n\
+   float last_bit_of_biased_exponent = fract(t) * 2.0;                       \n\
+   float remaining_bits_of_biased_exponent = floor(t);                       \n\
+   float byte4 = extract_bits(fraction, 0.0, 8.0) / 255.0;                   \n\
+   float byte3 = extract_bits(fraction, 8.0, 16.0) / 255.0;                  \n\
+   float byte2 = (last_bit_of_biased_exponent * 128.0 +                      \n\
+                  extract_bits(fraction, 16.0, 23.0)) / 255.0;               \n\
+   float byte1 = (sign * 128.0 + remaining_bits_of_biased_exponent) / 255.0; \n\
+   return vec4(byte4, byte3, byte2, byte1);                                  \n\
+}                                                                            \n\
 "
 
 function initShaders(gl, vShaderName, f_shader_str)
@@ -642,8 +631,9 @@ function go3D()
   console.log("done saving canvas.");
 
   console.log("getting function values");
-  var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + color_fn_to_float +
-                     frag_shader_start_2 + expr_editor.getValue() + frag_shader_end;
+  var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + 
+                     color_fn_to_float + frag_shader_start_2 + 
+                     expr_editor.getValue() + frag_shader_end;
   set_fShader( f_shader_str );
 
   data = getPixels();
