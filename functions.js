@@ -153,7 +153,7 @@ function render ()
   {
     if (done_tex_config) {
       gl.uniform1i( use_tex_loc, 1 );
- 
+
       if ( points_mode )
       {
         gl.bindBuffer( gl.ARRAY_BUFFER, tex_coords_buffer );
@@ -161,11 +161,11 @@ function render ()
 
         gl.bindTexture( gl.TEXTURE_2D, texture );
 
-        gl.bindBuffer( gl.ARRAY_BUFFER , points_buff3d ); 
+        gl.bindBuffer( gl.ARRAY_BUFFER , points_buff3d );
         gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0);
-        gl.drawArrays( gl.POINTS, 0, points3d.length );        
-      } 
-      else 
+        gl.drawArrays( gl.POINTS, 0, points3d.length );
+      }
+      else
       {
         for (var i = 0; i < all_strips_buffs.length; ++i)
         {
@@ -174,7 +174,7 @@ function render ()
 
           gl.bindTexture( gl.TEXTURE_2D, texture );
 
-          gl.bindBuffer( gl.ARRAY_BUFFER, all_strips_buffs[i] ); 
+          gl.bindBuffer( gl.ARRAY_BUFFER, all_strips_buffs[i] );
           gl.vertexAttribPointer( vPosition, 3, gl.FLOAT, false, 0, 0);
           gl.drawArrays( gl.TRIANGLE_STRIP, 0, all_strips[i].length );
         }
@@ -189,7 +189,7 @@ function render ()
   else
   {
     gl.uniform1i( use_tex_loc, 0 );
-    gl.bindBuffer( gl.ARRAY_BUFFER , points_buff2d ); 
+    gl.bindBuffer( gl.ARRAY_BUFFER , points_buff2d );
     gl.vertexAttribPointer( vPosition, 2, gl.FLOAT, false, 0, 0);
     gl.drawArrays( gl.TRIANGLE_FAN , 0, points.length );
   }
@@ -210,7 +210,7 @@ function handleWheel( e )
     render();
     return false;
   }
-  else 
+  else
   {
     scale_x = s > 0 ? scale_x * 0.95 : scale_x / 0.95;
     scale_y = s > 0 ? scale_y * 0.95 : scale_y / 0.95;
@@ -246,16 +246,16 @@ function handle_on_key_down( e )
 
 function handle_up( e )
 {
-  if ( e.shiftKey ) scale_x *= zoom_step; 
-  if ( e.shiftKey ) scale_y *= zoom_step; 
+  if ( e.shiftKey ) scale_x *= zoom_step;
+  if ( e.shiftKey ) scale_y *= zoom_step;
   else   cy += 0.1 * scale_y;
   setWindow();
   render();
 }
 function handle_down( e )
 {
-  if ( e.shiftKey ) scale_x /= zoom_step; 
-  if ( e.shiftKey ) scale_y /= zoom_step; 
+  if ( e.shiftKey ) scale_x /= zoom_step;
+  if ( e.shiftKey ) scale_y /= zoom_step;
   else cy -= 0.1 * scale_y;
   setWindow();
   render();
@@ -281,7 +281,7 @@ function handle_mouse_down ( e ) {
 
 var ox, oy;
 var rotations = mat4();
-function handle_mouse_move ( e ) 
+function handle_mouse_move ( e )
 {
   if ( m_down )
   {
@@ -307,7 +307,7 @@ function handle_mouse_move ( e )
         else {
           var tmp = rotate(val * sign, [0, 1, 0]);
           rotations = mult( tmp, rotations );
-        } 
+        }
 
         var val = dy/4;
         var sign = e.offsetY - oy > 0 ? -1 : 1;
@@ -315,7 +315,7 @@ function handle_mouse_move ( e )
 
         if (e.shiftKey) {
           pm = mult( pm, rotate(val * -0.1 * sign, [1, 0, 0]));
-        } 
+        }
         else {
           var tmp = rotate(val * sign, [1, 0, 0]);
           rotations = mult( tmp, rotations );
@@ -353,8 +353,8 @@ function updateWorldAlpa( value, axis )
         case 'z':
         var val = value - last_alpha_z.value;
         last_alpha_z.value = value;
-        pm = mult( pm, rotate(val, [0, 0, 1])); 
-        break;   
+        pm = mult( pm, rotate(val, [0, 0, 1]));
+        break;
     }
     render();
 }
@@ -404,11 +404,11 @@ function set_function( compile )
   pm = vm = mat4()
   if( arguments.length == 0 ) compile = true;
   mode3d = false;
- 
-  var cfn = compile ? clr_editor.getValue() : color_fn_to_float; 
-  var f_shader = header + hlpr_editor.getValue() + frag_shader_start_1 + 
+
+  var cfn = compile ? clr_editor.getValue() : color_fn_to_float;
+  var f_shader = header + hlpr_editor.getValue() + frag_shader_start_1 +
                  cfn + frag_shader_start_2 + expr_editor.getValue() + frag_shader_end;
- 
+
   set_fShader( f_shader );
   // Load shaders and initialize attribute buffers
   if (debug) console.log( f_shader_str )
@@ -503,9 +503,9 @@ var frag_shader_end = "\n;                                                     \
 var color_fn = "                                                               \n\
 vec4 getcolor(float z)                                                         \n\
 {                                                                              \n\
-  float r = z + z > 1.0 ? 1.0 : z + z;                                         \n\
-  float g = z     > 1.0 ? 1.0 : z;                                             \n\
-  float b = z * z > 1.0 ? 1.0 : z * z;                                         \n\
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;                               \n\
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;                                   \n\
+  float b = z * z > 1.0 ? 1.0 /  z      : z * z;                               \n\
   if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );                          \n\
   else return vec4(r, g, b, 1.0);                                              \n\
 }                                                                              \n\
@@ -515,10 +515,10 @@ vec4 getcolor(float z)                                                         \
  *  A `color function' which is not intended to be used to render colors.
  *  This function (along with its helpers) actually encode the float value
  *  into a vec4 of bytes which can be reconstructed into a float application
- *  side with a call to gl.readPixels( ..., data ) and a call to 
+ *  side with a call to gl.readPixels( ..., data ) and a call to
  *  Float32Array( data.buffer ). This overcomes the WebGL limitation of
  *  only being able to pass gl.UNSIGNED_BYTE to readPixels.
- *  
+ *
  *  NOTE: THIS IS NOT MY CODE!!! This code is copied verbatim from StackOverflow:
  *   http://stackoverflow.com/questions/17981163/webgl-read-pixels-from-floating-point-render-target
  */
@@ -556,7 +556,7 @@ vec4 getcolor (float val) {                                                    \
 }                                                                              \n\
 "
 
-function initShaders(gl, vShaderName, f_shader_str) 
+function initShaders(gl, vShaderName, f_shader_str)
 {
   function getShader(gl, shaderName, type)
   {
@@ -600,7 +600,7 @@ function saveImage()
 {
   console.log( "canvas.style.height == " + canvas.style.height )
   console.log( "canvas.style.width  == " + canvas.style.width  )
-  
+
   var ch = canvas.style.height;
   var cw = canvas.style.width ;
 
@@ -636,13 +636,13 @@ function saveImage()
 function go3D()
 {
   console.log("start 3d setup ...")
-  
+
   console.log("saving canvas image as texture");
   saveImage();
   console.log("done saving canvas.");
 
   console.log("getting function values");
-  var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + color_fn_to_float + 
+  var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + color_fn_to_float +
                      frag_shader_start_2 + expr_editor.getValue() + frag_shader_end;
   set_fShader( f_shader_str );
 
@@ -683,14 +683,14 @@ function set3dPoints( data )
   tex_coords2    = [];
   var l = data.length;
   console.log( "DATA LENGTH: " + l )
-  
+
   for ( var i = 0; i < l; ++i )
     if ( max < Math.abs(data[i]) && isFinite(data[i]) ) max = Math.abs(data[i]);
   if (max == 0) console.log( "max == " + max + " .... WAT" );
   else {
      if ( !isFinite(data[i]) && i > 0 ) data[i] = data[i-1];
   }
- 
+
   for ( var i = 0; i <= width3d;   ++i )
   {
     points3d2[i]      = [];
@@ -721,14 +721,14 @@ function set3dPoints( data )
         affine( 0, i, width3d, -1,  1 ),
         z_val_norm ) );
 
-      tex_coords.push( vec2( 
-        affine(0, j, width3d, 0, 1), 
+      tex_coords.push( vec2(
+        affine(0, j, width3d, 0, 1),
         affine(0, i, width3d, 1, 0) ) );
 
-      tex_coords2[i].push( vec2( 
-        affine(0, j, width3d, 0, 1), 
+      tex_coords2[i].push( vec2(
+        affine(0, j, width3d, 0, 1),
         affine(0, i, width3d, 1, 0) ) );
-    }  
+    }
   }
   setup_strips();
 
@@ -736,7 +736,7 @@ function set3dPoints( data )
 
   gl.bindBuffer( gl.ARRAY_BUFFER, tex_coords_buffer );
   gl.bufferData( gl.ARRAY_BUFFER, flatten( tex_coords ), gl.STATIC_DRAW );
-  
+
   console.log( "3d setup done" );
   eye =  vec3(  0.0,  0.0, 11.0 );
   at  =  vec3(  0.0,  0.0, 0.0 );
@@ -763,15 +763,15 @@ function setup_strips()
     for (var j = 0; j < width3d; ++j)
     {
       all_strips[i].push(
-        points3d2[i    ][j], 
+        points3d2[i    ][j],
         points3d2[i + 1][j]
       );
         norm_strips[i].push(
-        normal_points2[i    ][j], 
+        normal_points2[i    ][j],
         normal_points2[i + 1][j]
       );
       strip_coords[i].push(
-        tex_coords2[i  ][j], 
+        tex_coords2[i  ][j],
         tex_coords2[i+1][j]
       );
     }
@@ -818,14 +818,14 @@ function configureTexture( image, texture )
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
   gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_NEAREST);
   gl.generateMipmap( gl.TEXTURE_2D );
-  gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);   
+  gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
   gl.enableVertexAttribArray( tex_coord_loc );
   console.log( "Texture configuration done." );
 }
 
 /*
  * Utility affine function
- * 
+ *
  * Parameters:
  * -----------
  *     i : floor of input range
@@ -869,5 +869,5 @@ function toggleNormalize()
   pm_label = document.getElementById("normalize_mode");
   pm_label.innerHTML = normalize_mode ? "Normalized" : "Not-Normalized";
   setPointsBuffData();
-  render(); 
+  render();
 }
