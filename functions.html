@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Function Plotter</title></title>
+  <script type = "text/javascript" src = "Common/webgl-utils.js"></script>
+  <script type = "text/javascript" src = "Common/initShaders2.js"></script>
+  <script type = "text/javascript" src = "Common/MV.js"></script>
+  <style type="text/css">
+    .editor {
+        position: relative !important;
+        border: 2px solid lightgrey;
+        margin: auto;
+        height: 100px;
+        width: 100%;
+    }
+</style>
+</head>
+<body>
+  <h2>Function Plotter</h2>
+  <div style="width: 100%; float: left;">
+   <div id="left-canvas" style="width: 50%; float: left;">
+    <canvas id = "gl-canvas" class = "canv">
+    Oops ... your browser doesn't support the HTML5 canvas element
+    </canvas>
+    To the right are three code editing areas which are pre-filled with some default code.
+    All of the code is <tt>GLSL</tt> and is subject to its restrictions. Of particular
+    note, in most cases, there is no automatic conversion between integers and floats.
+    For example, the expression <tt>1 + 2.0</tt> will not compile:  since the literal
+    <tt>1</tt> is an integer and the literal <tt>2.0</tt> is a float. <p></p>
+
+    The function plotter has two distinct modes of operation: 2d mode and 3d mode. <p></p>
+
+    In 2d mode, the user specified function of x and y will be plotted. The output
+    value of the function is output as a 'heat map'. Specifically, the (user modifiable)
+    <tt>getcolor()</tt> function determines the color for a z-value. The user can use the
+    mouse wheel to 'zoom' in and out and click and drag to pan and zoom (this is nothing 
+    more than specifying the domain of the function). Additionally, the arrow keys will pan
+    and the up and down arrow keys will also zoom if the shift key is pressed.<p></p>
+
+    Once the user has set the function to be plotted and is satisfied with the bounds and
+    the coloring the function can be plotted in 3d. The actual z-value of the function is
+    computed for each pixel. Vertices corresponding to each pixel in the canvas are generated
+    and the image that was rendered in 2d mode is used as a texture to shade the vertices. <p></p>
+
+    In 3d mode, there are a couple more options to be aware of: render mode, and normalize
+    mode. There are two render modes. The first is triangle-strip mode which will render
+    function as a solid surface. The second is point-mode where each vertex is simply rendered
+    as a point. This often gives the impression of a mesh. <p></p>
+
+    3d mouse interaction is as follows: Clicking and dragging will rotate the plot in
+    the direction of the drag (along the x and y axis). The plot can be moved up and down 
+    by holding the shift key and dragging the mouse up and down. The plot can be rotated 
+    on the z-axis by holding the shift key while clicking and dragging left or right. <p></p>
+
+    This plotter is extremely versatile and can plot absolutely any function of x and y.
+    In fact the only limitation is inherent in the name 'function'. That is to say that
+    this plotter can only plot functions in the mathematical sense that a function can
+    have only one output for a given input. This means that you cannot plot spheres or
+    cubes etc. To demonstrate the versatility of this plotter, the following code is
+    provided to plot the mandelbrot set and the julia set. Just copy and paste the <tt>getcolor()</tt>
+    function into the color function area and the <tt>mandelbrot()</tt> or <tt>julia()</tt> into the helper
+    function area. Then put <tt>mandelbrot(x,y)</tt> into the expression area.
+
+    <p></p>
+    <pre class="editor" id="example">
+vec4 getcolor(float z)
+{
+  if (z == MAX - 1.0) return vec4( 0,0,0,1 );
+  z = z/MAX;
+  float r = z + z > 1.0 ? 1.0 / z              : z + z;
+  float g = z     > 1.0 ? 1.0 / z              : z;
+  float b = z     > 1.0 ? 1.0 / (z * fract(z)) : z * z;
+  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
+  else return vec4(r, g, b, 1.0);
+}
+
+#define MAX 100.0
+float mandelbrot(float fx, float fy) {
+  float iteration  = 0.0;
+  float x          = 0.0;
+  float y          = 0.0;
+  float xtemp      = 0.0;
+  
+  for ( float i = 0.0; i < MAX; ++i  ) 
+  {
+    if ( sqrt(x * x + y * y) <= 4.0 ) {
+      xtemp = x * x - y * y + fx;
+      y = 2.0 * x * y + fy;
+      x = xtemp;
+      iteration = i;
+    }
+    else{ break; }
+  }
+  return iteration;
+} 
+
+float julia( float x, float y ) {
+  float newRe = x;
+  float newIm = y;
+  float oldRe, oldIm, cRe, cIm;
+  cRe = -0.7;
+  cIm = 0.27015;
+  float z = 0.0;
+  for(float i = 0.0; i < max; i++)
+  {
+    oldRe = newRe;
+    oldIm = newIm;
+    newRe = oldRe * oldRe - oldIm * oldIm + cRe;
+    newIm = 2.0 * oldRe * oldIm + cIm;
+    if((newRe * newRe + newIm * newIm) > 4.0) break;
+    z = i;
+  }
+  return z;
+}
+    </pre>
+    </div>
+    <div id="instructions" style="width: 40%; float: right;">
+      Feel Free to modify the <span style="background: lightgreen; border: 2px solid gray; font-family: monospace">getcolor()</span>
+      function (just don't change it's name)
+      <pre class="editor" id="clr_input" style="height: 200px">
+vec4 getcolor(float z)
+{
+  float r = z + z > 1.0 ? 1.0 / z              : z + z;
+  float g = z     > 1.0 ? 1.0 / z              : z;
+  float b = z     > 1.0 ? 1.0 / (z * fract(z)) : z * z;
+  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
+  else return vec4(r, g, b, 1.0);
+}</pre>
+      <br>
+      <button onclick="set_function();" > Update color function </button><br>
+      <p></p>
+      Helper function(s) ( <span style="background: PapayaWhip ; fon-family: monospace;border: 2px solid lightgrey;">optional</span> -- just remember to use glsl syntax ...):
+      <br><pre class = "editor" id="helper_input" rows="4" cols="80" style="font-family: monospace;">
+//
+//  Write any custom functions here ...
+//
+      </pre><br>
+      <span style = "background: Tomato;">Required: </span> Input an expression in terms of 
+      <span style="background: Tan; fon-family: monospace;border: 2px solid lightgrey;">x</span> and 
+      <span style="background: Tan; fon-family: monospace;border: 2px solid lightgrey;">y</span> e.g.:<pre id="example_input">sin( x*x + y*y )</pre>
+      <br><pre class="editor" id="function_input">
+// enter an expression to plot here (or use this example)
+sin( x*x + y*y )
+</pre><br>
+      <button onclick="set_function();" > Render2D </button>
+      <button onclick="go3D();" > Render3D </button><br>
+      Current Render mode: <pre id="points_mode">Triangle Strip</pre>
+      Current Normalize mode: <pre id="normalize_mode">Normalized</pre>
+      <button onclick="togglePoints();" > Toggle Points/Trinagle Strip </button>
+      <button onclick="toggleNormalize();" > Toggle Normalization </button><br><br>
+
+      Set bounds: <br>
+
+      Min X: <label id="minX"></label><br>
+      <input id         = "set_min_x"
+            type        = "text" style="width: 100%"><br><br>
+      Max X: <label id  = "maxX"></label><br>
+      <input id         = "set_max_x"
+            type        = "text" style="width: 100%"><br><br>
+      Min Y: <label id  = "minY"></label><br>
+      <input id         = "set_min_y"
+            type        = "text" style="width: 100%"><br><br>
+      Max Y: <label id  = "maxY"></label><br>
+      <input id         = "set_max_y"
+            type        = "text" style="width: 100%"><br><br>
+      <button onclick="set_range()">Set</button>
+      <p></p>
+    </div>
+  </div>
+
+
+
+
+<script src="Common/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+<script type = "text/javascript" src = "functions.js"></script>
+
+
+</body>
+</html>
