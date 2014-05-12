@@ -134,8 +134,7 @@ vec4 getcolor(float z)
   float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
   float g = z     > 1.0 ? 1.0 / (z * z) : z;
   float b = z     > 1.0 ? 1.0 / z       : z * z;
-  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
-  else return vec4(r, g, b, 1.0);
+  return vec4(r, g, b, 1.0);
 }</pre>
       <br>
       <button onclick="set_function();" > Update color function </button><br>
