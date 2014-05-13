@@ -144,6 +144,10 @@ Rendered in 3D (with a small zoom out and rotation):
 
 ![3d-sin](img/3d-sin.png "3d-sin")
 
+In 3D mode with 'Points mode' on:
+
+![3d-sin](img/3d-sin-points.png "3d-sin")
+
 ```java
 vec4 getcolor(float z)
 {
