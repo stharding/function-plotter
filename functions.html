@@ -76,23 +76,22 @@
     <pre class="editor" id="example">
 vec4 getcolor(float z)
 {
-  if (z == MAX - 1.0) return vec4( 0,0,0,1 );
-  z = z/MAX;
-  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
-  float g = z     > 1.0 ? 1.0 / (z * z) : z;
-  float b = z     > 1.0 ? 1.0 / z       : z * z;
-  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
-  else return vec4(r, g, b, 1.0);
+  if (z == max - 1.0) return vec4(0,0,0,1);
+  z/=max;
+  float r = z >= 0.0 ? z/(1.0+z) : -z/(2.0-z);
+  float g = z >= 0.0 ? z/(1.0+z) : -z/(5.0-z);
+  float b = z >= 0.0 ? z/(5.0+z) : -z/(1.0-z);
+  return vec4(r, g, b, 1.0);
 }
 
-#define MAX 100.0
+const float max = 100.0;
 float mandelbrot(float fx, float fy) {
   float iteration  = 0.0;
   float x          = 0.0;
   float y          = 0.0;
   float xtemp      = 0.0;
 
-  for ( float i = 0.0; i < MAX; ++i  )
+  for ( float i = 0.0; i < max; ++i  )
   {
     if ( sqrt(x * x + y * y) <= 4.0 ) {
       xtemp = x * x - y * y + fx;
@@ -136,8 +135,6 @@ vec4 getcolor(float z)
   float b = z     > 1.0 ? 1.0 / z       : z * z;
   return vec4(r, g, b, 1.0);
 }</pre>
-      <br>
-      <button onclick="set_function();" > Update color function </button><br>
       <p></p>
       Helper function(s) ( <span style="background: PapayaWhip ; fon-family: monospace;border: 2px solid lightgrey;">optional</span> -- just remember to use glsl syntax ...):
       <br><pre class = "editor" id="helper_input" rows="4" cols="80" style="font-family: monospace;">
