@@ -78,9 +78,9 @@ vec4 getcolor(float z)
 {
   if (z == max - 1.0) return vec4(0,0,0,1);
   z/=max;
-  float r = z >= 0.0 ? z/(1.0+z) : -z/(2.0-z);
-  float g = z >= 0.0 ? z/(1.0+z) : -z/(5.0-z);
-  float b = z >= 0.0 ? z/(5.0+z) : -z/(1.0-z);
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
   return vec4(r, g, b, 1.0);
 }
 
