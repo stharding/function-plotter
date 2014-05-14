@@ -4,7 +4,7 @@
 
 This project uses the [Ace](http://ace.c9.io/#nav=about) project for the
 user editable portions of the function-plotter. The `ace-builds` folder must be
-in the `Common` folder in this project. The repository for `ace-builds` is at 
+in the `Common` folder in this project. The repository for `ace-builds` is at
 https://github.com/ajaxorg/ace-builds.git
 
 ### Overview ###
@@ -272,19 +272,16 @@ Mandelbrot Set. If we use this code in the helper function editor:
 ```java
 const float max = 100.0;
 float julia( float x, float y ) {
-  float newRe = x;
-  float newIm = y;
-  float oldRe, oldIm, cRe, cIm;
-  cRe = -0.7;
-  cIm = 0.27015;
+  float cRe = -0.7;
+  float cIm = 0.27015;
   float z = 0.0;
+  float xtemp;
   for(float i = 0.0; i < max; i++)
   {
-    oldRe = newRe;
-    oldIm = newIm;
-    newRe = oldRe * oldRe - oldIm * oldIm + cRe;
-    newIm = 2.0 * oldRe * oldIm + cIm;
-    if((newRe * newRe + newIm * newIm) > 4.0) break;
+    xtemp = x * x - y * y + cRe;
+    y = 2.0 * x * y + cIm;
+    x = xtemp;
+    if((x * x + y * y) > 4.0) break;
     z = i;
   }
   return z;
