@@ -151,6 +151,23 @@ In 3D mode with 'Points mode' on:
 
 ![3d-sin-points](img/3d-sin-points.png "3d-sin-points")
 
+Some functions have interesting behavior at large scales. Consider this
+function: `sin( x*x + y*y )*1.0/tan(x*y+x*y)`
+
+At a small scale it looks like this:
+
+![sin-tan](img/sin-tan.png)
+
+But at large scale it looks like this (the bounding box is approximately
+-75,000 to 75,000):
+
+![sin-tan](img/sin-tan-big.png)
+
+It gets even more interesting when plotted in 3D with normalization turned off
+and points mode on. When we rotate the plot, we see what appear to be regular
+layers of points that have roughly equal values:
+
+![sin-tan](img/sin-tan-3d.png)
 
 #### Helper Functions: ####
 
@@ -243,7 +260,7 @@ This effect can perhaps more easily be seen if we switch to points mode:
 Another example of an interesting non-closed form function is the
 
 [Julia Set](http://en.wikipedia.org/wiki/Julia_set) which is similar to the
-Mandelbrot Set. If we use this code in the
+Mandelbrot Set. If we use this code in the helper function editor:
 
 ```java
 const float max = 100.0;
@@ -266,3 +283,22 @@ float julia( float x, float y ) {
   return z;
 }
 ```
+
+we get this rendering (using the same `getcolor()` function and entering
+`julia(x, y)` in the expression editor):
+
+![julia](img/julia.png)
+
+Zooming in and bumping up `max` to 2000.0 we get:
+
+![julia](img/julia-zoom.png)
+
+Going 3D (with some rotations and zooming):
+
+![julia](img/julia-3d-tri.png)
+
+In points mode:
+
+![julia](img/julia-3d-pnt.png)
+
+Feel free to contact me with questions/issues at stharding at gmail dot com
