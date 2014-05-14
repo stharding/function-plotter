@@ -189,7 +189,7 @@ or not, we would have to do an infinite number of iterations for every point!
 
 Since that is not possible, the best we can do is do a finite number of
 iterations and if a complex number `c = x + iy` makes
-<img src="img/mand_formula.png" height=13pt></img> `Z` less than some finite
+<img src="img/mand_formula.png" height=13pt></img>  less than some finite
 bound (4 turns out to be a suitable bound) we declare it to be in the set.
 
 If we interpret pixel locations on the canvas to be point in the complex plane
