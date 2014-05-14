@@ -22,7 +22,7 @@ importantly, the user can edit the function to be plotted.
 
 ##### 3D Mode: #####
 
-In 3d mode, the user can no longer change the color mapping or the expression
+In 3d mode, the user can no longer change the color mapping or the expressionM
 to be evaluated (all such edits should be completed in 2d mode). Instead, the
 user is free to explore the plotted function in other ways. In 3d mode, clicking
 and dragging the mouse will rotate the plotted function in 3d space. The mouse
@@ -62,6 +62,9 @@ An editor is provided so that the user can implement any helper functions they
 would like for use in the expression evaluator area. This allows for the use
 of functions above and beyond the builtin `GLSL` functions. See the example
 section for some interesting uses of the helper function editor.
+
+**Note:** Any global variables declared in this box will be in scope for both
+both the color function editor and the expression editor.
 
 ##### Expression Editor: #####
 
@@ -148,6 +151,22 @@ In 3D mode with 'Points mode' on:
 
 ![3d-sin](img/3d-sin-points.png "3d-sin")
 
+#### Helper Functions ####
+
+The utility of the function plotter is greatly expanded by the ability to
+define custom function which can be called by the expression evaluator.
+
+Functions which do not have a closed form or are otherwise best suited to
+iterative (or approximate) evaluation can be plotted by defining a helper
+function and calling it in the expression editor.
+
+An excellent example of a function which does not have a closed form is the
+[Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
+
+The Mandelbrot set is defined as the set of points `Z` which satisfy the
+condition that the expression $Z_{n+1} = z_n^2 + c, c \in C$ is bounded, for all
+points in the complex plane
+
 ```java
 vec4 getcolor(float z)
 {
@@ -169,7 +188,7 @@ float mandelbrot(float fx, float fy) {
   float y          = 0.0;
   float xtemp      = 0.0;
 
-  for ( float i = 0.0; i < MAX; ++i  )
+  for ( float i = 0.0; i < max; ++i  )
   {
     if ( sqrt(x * x + y * y) <= 4.0 ) {
       xtemp = x * x - y * y + fx;
