@@ -164,8 +164,9 @@ An excellent example of a function which does not have a closed form is the
 [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
 
 The Mandelbrot set is defined as the set of points `Z` which satisfy the
-condition that the expression $Z_{n+1} = z_n^2 + c, c \in C$ is bounded, for all
-points in the complex plane
+condition that the expression
+<img src="img/mand_formula.png" style="width: 100pt; height=11pt"></img>
+is bounded, for all points in the complex plane. 
 
 ```java
 vec4 getcolor(float z)
