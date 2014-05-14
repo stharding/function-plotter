@@ -149,9 +149,10 @@ Rendered in 3D (with a small zoom out and rotation):
 
 In 3D mode with 'Points mode' on:
 
-![3d-sin](img/3d-sin-points.png "3d-sin")
+![3d-sin-points](img/3d-sin-points.png "3d-sin-points")
 
-#### Helper Functions ####
+
+#### Helper Functions: ####
 
 The utility of the function plotter is greatly expanded by the ability to
 define custom function which can be called by the expression evaluator.
@@ -163,25 +164,26 @@ function and calling it in the expression editor.
 An excellent example of a function which does not have a closed form is the
 [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
 
-The Mandelbrot set is defined as the set of points `Z` which satisfy the
-condition that the expression
-<img src="img/mand_formula.png" height=13pt></img>
-is bounded, for all points in the complex plane.
+The [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
+is defined as the set of points `Z` which satisfy the condition that the
+expression <img src="img/mand_formula.png" height=13pt></img> is bounded, for
+all points in the complex plane. To actually know if a point is in the set
+or not, we would have to do an infinite number of iterations for every point!
 
+Since that is not possible, the best we can do is do a finite number of
+iterations and if a complex number `c = x + iy` makes
+<img src="img/mand_formula.png" height=13pt></img> `Z` less than some finite
+bound (4 turns out to be a suitable bound) we declare it to be in the set.
 
+If we interpret pixel locations on the canvas to be point in the complex plane
+we can plot an approximation of the
+[Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set). Furthermore,
+if we color each pixel based on the number of iterations it took to exclude it
+from the set, a very interesting image is generated--especially if we zoom in
+on parts of the image.
 
-```java
-vec4 getcolor(float z)
-{
-  if (z == max - 1.0) return vec4( 0,0,0,1 );
-  z /= max;
-  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
-  float g = z     > 1.0 ? 1.0 / (z * z) : z;
-  float b = z     > 1.0 ? 1.0 / z       : z * z;
-  if ( hslMode == 1 ) return hsvToRgb( z, 0.6, 0.5 );
-  else return vec4(r, g, b, 1.0);
-}
-```
+Here is some code to put into the helper function code editor to render the
+Mandelbrot:
 
 ```java
 const float max = 100.0;
@@ -204,6 +206,44 @@ float mandelbrot(float fx, float fy) {
   return iteration;
 }
 ```
+We will also need to modify the color function a little:
+
+```java
+vec4 getcolor(float z)
+{
+  if (z == max - 1.0) return vec4(0,0,0,1);
+  z/=max;
+  float r = z + z > 1.0 ? 1.0 / (z + z) : z + z;
+  float g = z     > 1.0 ? 1.0 / (z * z) : z;
+  float b = z     > 1.0 ? 1.0 / z       : z * z;
+  return vec4(r, g, b, 1.0);
+}
+```
+Now just enter `mandelbrot(x, y)` in the expression evaluator and click the
+`Render2D` button.
+
+Here is the rendering of the set that you get:
+
+![Mandelbrot](img/mand.png)
+
+If we zoom in a bit on one of the interior edges and change `max` to 700.0 we
+can see some nice detail:
+
+![Mandelbrot](img/mand-zoom.png)
+
+If we transition to 3D mode and tilt the plot a bit we can see the rate at
+which point were eliminated from the set by their elevation:
+
+![Mandelbrot](img/mand-3d-tri.png)
+
+This effect can perhaps more easily be seen if we switch to points mode:
+
+![Mandelbrot](img/mand-3d-pnt.png)
+
+Another example of an interesting non-closed form function is the
+
+[Julia Set](http://en.wikipedia.org/wiki/Julia_set) which is similar to the
+Mandelbrot Set. If we use this code in the
 
 ```java
 const float max = 100.0;
