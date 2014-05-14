@@ -166,6 +166,8 @@ An excellent example of a function which does not have a closed form is the
 The Mandelbrot set is defined as the set of points `Z` which satisfy the
 condition that the expression ![](img/mand_formula.png) is bounded, for all points in the complex plane.
 
+<img src="img/mand_formula.png" height=13pt></img>
+
 ```java
 vec4 getcolor(float z)
 {
