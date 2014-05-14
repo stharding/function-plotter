@@ -937,33 +937,33 @@ function is real-time for any computer with a modern graphics card.</p>
 <p>The default function <code>sin( x*x + y*y )</code> with the default color mapping and
 bounding box looks like this in 2D mode:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/2d-sin.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/2d-sin.png" alt="2d-sin" title="2d-sin" style="max-width:100%;"></a></p>
+<p><a href="img/2d-sin.png" target="_blank"><img src="img/2d-sin.png" alt="2d-sin" title="2d-sin" style="max-width:100%;"></a></p>
 
 <p>Rendered in 3D (with a small zoom out and rotation):</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/3d-sin.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/3d-sin.png" alt="3d-sin" title="3d-sin" style="max-width:100%;"></a></p>
+<p><a href="img/3d-sin.png" target="_blank"><img src="img/3d-sin.png" alt="3d-sin" title="3d-sin" style="max-width:100%;"></a></p>
 
 <p>In 3D mode with 'Points mode' on:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/3d-sin-points.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/3d-sin-points.png" alt="3d-sin-points" title="3d-sin-points" style="max-width:100%;"></a></p>
+<p><a href="img/3d-sin-points.png" target="_blank"><img src="img/3d-sin-points.png" alt="3d-sin-points" title="3d-sin-points" style="max-width:100%;"></a></p>
 
 <p>Some functions have interesting behavior at large scales. Consider this
 function: <code>sin( x*x + y*y )*1.0/tan(x*y+x*y)</code></p>
 
 <p>At a small scale it looks like this:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/sin-tan.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/sin-tan.png" alt="sin-tan" style="max-width:100%;"></a></p>
+<p><a href="img/sin-tan.png" target="_blank"><img src="img/sin-tan.png" alt="sin-tan" style="max-width:100%;"></a></p>
 
 <p>But at large scale it looks like this (the bounding box is approximately
 -75,000 to 75,000):</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/sin-tan-big.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/sin-tan-big.png" alt="sin-tan" style="max-width:100%;"></a></p>
+<p><a href="img/sin-tan-big.png" target="_blank"><img src="img/sin-tan-big.png" alt="sin-tan" style="max-width:100%;"></a></p>
 
 <p>It gets even more interesting when plotted in 3D with normalization turned off
 and points mode on. When we rotate the plot, we see what appear to be regular
 layers of points that have roughly equal values:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/sin-tan-3d.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/sin-tan-3d.png" alt="sin-tan" style="max-width:100%;"></a></p>
+<p><a href="img/sin-tan-3d.png" target="_blank"><img src="img/sin-tan-3d.png" alt="sin-tan" style="max-width:100%;"></a></p>
 
 <h4>
 <a name="user-content-helper-functions-1" class="anchor" href="#helper-functions-1"><span class="octicon octicon-link"></span></a>Helper Functions:</h4>
@@ -980,13 +980,13 @@ function and calling it in the expression editor.</p>
 
 <p>The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot Set</a>
 is defined as the set of points <code>Z</code> which satisfy the condition that the
-expression <a href="file:///Users/stharding/repos/functions/img/mand_formula.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand_formula.png" height="13pt" style="max-width:100%;"></a> is bounded, for
+expression <a href="img/mand_formula.png" target="_blank"><img src="img/mand_formula.png" height="13pt" style="max-width:100%;"></a> is bounded, for
 all points in the complex plane. To actually know if a point is in the set
 or not, we would have to do an infinite number of iterations for every point!</p>
 
 <p>Since that is not possible, the best we can do is do a finite number of
 iterations and if a complex number <code>c = x + iy</code> makes
-<a href="file:///Users/stharding/repos/functions/img/mand_formula.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand_formula.png" height="13pt" style="max-width:100%;"></a>  less than some finite
+<a href="img/mand_formula.png" target="_blank"><img src="img/mand_formula.png" height="13pt" style="max-width:100%;"></a>  less than some finite
 bound (4 turns out to be a suitable bound) we declare it to be in the set.</p>
 
 <p>If we interpret pixel locations on the canvas to be point in the complex plane
@@ -1038,21 +1038,21 @@ Mandelbrot:</p>
 
 <p>Here is the rendering of the set that you get:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/mand.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
+<p><a href="img/mand.png" target="_blank"><img src="img/mand.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
 
 <p>If we zoom in a bit on one of the interior edges and change <code>max</code> to 700.0 we
 can see some nice detail:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/mand-zoom.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand-zoom.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
+<p><a href="img/mand-zoom.png" target="_blank"><img src="img/mand-zoom.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
 
 <p>If we transition to 3D mode and tilt the plot a bit we can see the rate at
 which point were eliminated from the set by their elevation:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/mand-3d-tri.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand-3d-tri.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
+<p><a href="img/mand-3d-tri.png" target="_blank"><img src="img/mand-3d-tri.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
 
 <p>This effect can perhaps more easily be seen if we switch to points mode:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/mand-3d-pnt.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/mand-3d-pnt.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
+<p><a href="img/mand-3d-pnt.png" target="_blank"><img src="img/mand-3d-pnt.png" alt="Mandelbrot" style="max-width:100%;"></a></p>
 
 <p>Another example of an interesting non-closed form function is the</p>
 
@@ -1080,18 +1080,18 @@ Mandelbrot Set. If we use this code in the helper function editor:</p>
 <p>we get this rendering (using the same <code>getcolor()</code> function and entering
 <code>julia(x, y)</code> in the expression editor):</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/julia.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/julia.png" alt="julia" style="max-width:100%;"></a></p>
+<p><a href="img/julia.png" target="_blank"><img src="img/julia.png" alt="julia" style="max-width:100%;"></a></p>
 
 <p>Zooming in and bumping up <code>max</code> to 2000.0 we get:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/julia-zoom.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/julia-zoom.png" alt="julia" style="max-width:100%;"></a></p>
+<p><a href="img/julia-zoom.png" target="_blank"><img src="img/julia-zoom.png" alt="julia" style="max-width:100%;"></a></p>
 
 <p>Going 3D (with some rotations and zooming):</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/julia-3d-tri.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/julia-3d-tri.png" alt="julia" style="max-width:100%;"></a></p>
+<p><a href="img/julia-3d-tri.png" target="_blank"><img src="img/julia-3d-tri.png" alt="julia" style="max-width:100%;"></a></p>
 
 <p>In points mode:</p>
 
-<p><a href="file:///Users/stharding/repos/functions/img/julia-3d-pnt.png" target="_blank"><img src="file:///Users/stharding/repos/functions/img/julia-3d-pnt.png" alt="julia" style="max-width:100%;"></a></p>
+<p><a href="img/julia-3d-pnt.png" target="_blank"><img src="img/julia-3d-pnt.png" alt="julia" style="max-width:100%;"></a></p>
 
 <p>Feel free to contact me with questions/issues at stharding at gmail dot com</p></body></html>
