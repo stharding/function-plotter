@@ -265,7 +265,6 @@ This effect can perhaps more easily be seen if we switch to points mode:
 ![Mandelbrot](img/mand-3d-pnt.png)
 
 Another example of an interesting non-closed form function is the
-
 [Julia Set](http://en.wikipedia.org/wiki/Julia_set) which is similar to the
 Mandelbrot Set. If we use this code in the helper function editor:
 
