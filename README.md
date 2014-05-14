@@ -1,5 +1,12 @@
 ## Function Plotter Documentation ##
 
+### Requirements ###
+
+This project uses the [Ace](http://ace.c9.io/#nav=about) project for the
+user editable portions of the function-plotter. The `ace-builds` folder must be
+in the `Common` folder in this project. The repository for `ace-builds` is at 
+https://github.com/ajaxorg/ace-builds.git
+
 ### Overview ###
 
 The function plotter plots functions of the form `z = f(x, y)`.
