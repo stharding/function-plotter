@@ -132,7 +132,7 @@ Using a simple transformation to convert the `x` and `y` function coordinates
 into clip coordinates, the application generates two 512x512 array of vertices.
 In both of the arrays the `x, y` part of the vertex is drawn from the
 transformed `x` and `y` function coordinates. In one of the arrays, the `z`
-value is the unchanged function output and in the other array, the `z` value is
+value is the unchanged function output and in the other array, the `z` value
 takes the function output and transforms it into the range `[-1, 1]`.
 
 In both cases, `NaN` and `Infinity` are handled (since these are not
