@@ -33,7 +33,7 @@ In 3d mode, the user can no longer change the color mapping or the expression
 to be evaluated (all such edits should be completed in 2d mode). Instead, the
 user is free to explore the plotted function in other ways. In 3d mode, clicking
 and dragging the mouse will rotate the plotted function in 3d space. The mouse
-wheel zooms into our out of the 3d plot.
+wheel zooms into or out of the 3d plot.
 
 ### Usage ###
 
