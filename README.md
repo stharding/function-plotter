@@ -109,7 +109,7 @@ rendering is real-time for most reasonable functions.
 Once the mode has completely transitioned to 3D, the plotter is trivially
 straightforward. The freedom to change the domain of the function and its
 color mapping is disabled. In 3D mode the function is plotted as a 3-dimensional
-surface. Instead of changing the domain (by panning andzooming) dragging the
+surface. Instead of changing the domain (by panning and zooming) dragging the
 mouse rotates the function plot about the appropriate axis. If the shift key is
 depressed, dragging up and down will move the plot up and down in the view.
 Dragging left or right with the shift key depressed will rotate the function
