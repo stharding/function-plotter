@@ -41,11 +41,11 @@ The plotter consists primarily of a canvas area, a color function
 editor, a helper function editor, and an expression editor.
 
 **NOTE**: Each of the editable areas will end up modifying the fragment shader.
-as such, all of the `GLSL` language is available to implement these functions.
+As such, all of the `GLSL` language is available to implement these functions.
 On the other hand, the user is also limited by the `GLSL` language
 peculiarities. For example, `GLSL` provides no implicit casting of numeric
 literals. e.g. the following expression will cause a compilation error:
-`1 + 1.0`! Since almost all of the builtin `GLSL` functions take `float` typed
+`1 + 1.0`! Since almost all of the built-in `GLSL` functions take `float` typed
 input, it is probably best to avoid `int` variables and integer constants.
 
 
@@ -67,7 +67,7 @@ vec4 getcolor(float z)
 
 An editor is provided so that the user can implement any helper functions they
 would like for use in the expression evaluator area. This allows for the use
-of functions above and beyond the builtin `GLSL` functions. See the example
+of functions above and beyond the built-in `GLSL` functions. See the example
 section for some interesting uses of the helper function editor.
 
 **Note:** Any global variables declared in this box will be in scope for both
@@ -76,7 +76,7 @@ both the color function editor and the expression editor.
 ##### Expression Editor: #####
 
 An editor box is provided so the user can input an expression to be plotted.
-the expression _must_ be in terms of the (internally declared) variables `x`
+The expression _must_ be in terms of the (internally declared) variables `x`
 and `y`. A default expression is provided:
 ```java
 sin( x*x + y*y )
@@ -179,7 +179,7 @@ layers of points that have roughly equal values:
 #### Helper Functions: ####
 
 The utility of the function plotter is greatly expanded by the ability to
-define custom function which can be called by the expression evaluator.
+define custom functions which can be called by the expression evaluator.
 
 Functions which do not have a closed form or are otherwise best suited to
 iterative (or approximate) evaluation can be plotted by defining a helper
@@ -199,7 +199,7 @@ iterations and if a complex number `c = x + iy` makes
 <img src="img/mand_formula.png" height=13pt></img>  less than some finite
 bound (4 turns out to be a suitable bound) we declare it to be in the set.
 
-If we interpret pixel locations on the canvas to be point in the complex plane
+If we interpret pixel locations on the canvas to be points in the complex plane
 we can plot an approximation of the
 [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set). Furthermore,
 if we color each pixel based on the number of iterations it took to exclude it
@@ -256,7 +256,7 @@ can see some nice detail:
 ![Mandelbrot](img/mand-zoom.png)
 
 If we transition to 3D mode and tilt the plot a bit we can see the rate at
-which point were eliminated from the set by their elevation:
+which points were eliminated from the set by their elevation:
 
 ![Mandelbrot](img/mand-3d-tri.png)
 
