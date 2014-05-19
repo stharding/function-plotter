@@ -11,6 +11,7 @@ https://github.com/ajaxorg/ace-builds.git
 
 The function plotter plots functions of the form `z = f(x, y)`.
 The plotter has two fundamental modes: 2d mode and 3d mode.
+[Try it for yourself](http://www.cs.unm.edu/~stharding/function-plotter/functions.html)
 
 ##### 2D Mode: #####
 
