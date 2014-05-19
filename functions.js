@@ -601,42 +601,45 @@ function initShaders(gl, vShaderName, f_shader_str)
 function saveImage( save_local )
 {
   if( arguments.length == 0 ) save_local = false;
-  var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-  window.location.href=image;
+  
+  if ( save_local ){
+    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+    window.location.href=image;
+  } else {
+    console.log( "canvas.style.height == " + canvas.style.height )
+    console.log( "canvas.style.width  == " + canvas.style.width  )
 
-  console.log( "canvas.style.height == " + canvas.style.height )
-  console.log( "canvas.style.width  == " + canvas.style.width  )
+    var ch = canvas.style.height;
+    var cw = canvas.style.width ;
 
-  var ch = canvas.style.height;
-  var cw = canvas.style.width ;
+    var  h = canvas.height;
+    var  w = canvas.width;
 
-  var  h = canvas.height;
-  var  w = canvas.width;
+    canvas.style.width  = 512 + "px";
+    canvas.style.height = 512 + "px";
 
-  canvas.style.width  = 512 + "px";
-  canvas.style.height = 512 + "px";
+    canvas.width  = 512;
+    canvas.height = 512;
 
-  canvas.width  = 512;
-  canvas.height = 512;
+    gl.viewport( 0, 0, 512, 512 );
+    set_function();
+    tex_img = new Image();
+    tex_img.src = canvas.toDataURL();
+    tex_img.onload = function() {
+      texture = gl.createTexture();
+      configureTexture( tex_img, texture );
+      done_tex_config = true;
+    }
+    canvas.style.height = ch;
+    canvas.style.width  = cw;
+    console.log( "canvas.style.height == " + canvas.style.height )
+    console.log( "canvas.style.width  == " + canvas.style.width  )
 
-  gl.viewport( 0, 0, 512, 512 );
-  set_function();
-  tex_img = new Image();
-  tex_img.src = canvas.toDataURL();
-  tex_img.onload = function() {
-    texture = gl.createTexture();
-    configureTexture( tex_img, texture );
-    done_tex_config = true;
+    canvas.height = h;
+    canvas.width  = w;
+    gl.viewport( 0, 0, canvas.width, canvas.height );
+    set_function();    
   }
-  canvas.style.height = ch;
-  canvas.style.width  = cw;
-  console.log( "canvas.style.height == " + canvas.style.height )
-  console.log( "canvas.style.width  == " + canvas.style.width  )
-
-  canvas.height = h;
-  canvas.width  = w;
-  gl.viewport( 0, 0, canvas.width, canvas.height );
-  set_function();
 }
 
 function go3D()
