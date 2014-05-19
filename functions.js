@@ -598,8 +598,12 @@ function initShaders(gl, vShaderName, f_shader_str)
   return program;
 }
 
-function saveImage()
+function saveImage( save_local )
 {
+  if( arguments.length == 0 ) save_local = false;
+  var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
+  window.location.href=image;
+
   console.log( "canvas.style.height == " + canvas.style.height )
   console.log( "canvas.style.width  == " + canvas.style.width  )
 
