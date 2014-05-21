@@ -77,11 +77,11 @@ window.onresize     = init;
 
 function init()
 {
-    if (first) canvas = document.getElementById( "gl-canvas" );
+    canvas = document.getElementById( "gl-canvas" );
 
-    var maxHeight = window.innerHeight * 0.9;
-    var maxWidth  = canvas.parentNode.clientWidth;
-    var dimension = maxHeight < maxWidth ? maxHeight : maxWidth;
+    var maxHeight  = window.innerHeight * 0.9;
+    var maxWidth   = canvas.parentNode.clientWidth;
+    var dimension  = maxHeight < maxWidth ? maxHeight : maxWidth;
     var pixelRatio = window.devicePixelRatio || 1;
 
     canvas.style.width  = dimension + "px";
@@ -89,7 +89,7 @@ function init()
 
     canvas.width  = canvas.clientWidth  * pixelRatio;
     canvas.height = canvas.clientHeight * pixelRatio;
-    WIDTH  = canvas.width;
+    WIDTH         = canvas.width;
 
     minX_box = document.getElementById("set_min_x");
     maxX_box = document.getElementById("set_max_x");
@@ -427,11 +427,11 @@ function set_function( compile )
   if (debug) console.log( f_shader_str )
   if (!setup_done)
   {
-    minX_label     = document.getElementById( "set_min_x" );
-    maxX_label     = document.getElementById( "set_max_x" );
-    minY_label     = document.getElementById( "set_min_y" );
-    maxY_label     = document.getElementById( "set_max_y" );
-    helpers        = document.getElementById( "helpers"   );
+    minX_label = document.getElementById( "set_min_x" );
+    maxX_label = document.getElementById( "set_max_x" );
+    minY_label = document.getElementById( "set_min_y" );
+    maxY_label = document.getElementById( "set_max_y" );
+    helpers    = document.getElementById( "helpers"   );
 
     setWindow();
   }
@@ -603,8 +603,11 @@ function saveImage( save_local )
   if( arguments.length == 0 ) save_local = false;
   
   if ( save_local ){
-    var image = canvas.toDataURL("image/png").replace("image/png", "image/octet-stream");
-    window.location.href=image;
+    var image = document.getElementById( "save_img" );
+    image.src = canvas.toDataURL("image/png");
+    $(function() {
+        $( "#dialog" ).dialog();
+      })
   } else {
     console.log( "canvas.style.height == " + canvas.style.height )
     console.log( "canvas.style.width  == " + canvas.style.width  )

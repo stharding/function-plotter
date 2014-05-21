@@ -2,6 +2,9 @@
 <html>
 <head>
   <title>Function Plotter</title></title>
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+  <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script type = "text/javascript" src = "Common/webgl-utils.js"></script>
   <script type = "text/javascript" src = "Common/initShaders2.js"></script>
   <script type = "text/javascript" src = "Common/MV.js"></script>
@@ -150,9 +153,9 @@ sin( x*x + y*y )
 </pre><br>
       <button onclick="set_function();" > Render2D </button>
       <button onclick="go3D();" > Render3D </button>
-      <!-- <button onclick="saveImage(true);" > Save Image </button><br> -->
-      Current Render mode: <pre id="points_mode">Triangle Strip</pre>
-      Current Normalize mode: <pre id="normalize_mode">Normalized</pre>
+      <button onclick="saveImage(true);" > Save Image </button><br>
+      Current Render mode: <tt><span id="points_mode">Triangle Strip</span></tt><br>
+      Current Normalize mode: <tt><span id="normalize_mode">Normalized</span></tt><br>
       <button onclick="togglePoints();" > Toggle Points/Trinagle Strip </button>
       <button onclick="toggleNormalize();" > Toggle Normalization </button><br><br>
 
@@ -174,7 +177,10 @@ sin( x*x + y*y )
       <p></p>
     </div>
   </div>
-
+<div id="dialog" title="Save Image">
+  <img id="save_img" height="300px" width="300px"></img>
+  <p>Right click on the image and select 'save as'. Click the 'X' to close this dialog.</p>
+</div>
 <script src="Common/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type = "text/javascript" src = "functions.js"></script>
 
