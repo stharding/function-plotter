@@ -2,6 +2,8 @@
 
 ### Requirements ###
 
+This project is only tested in chrome! There are known issues with Firefox.
+
 This project uses the [Ace](http://ace.c9.io/#nav=about) project for the
 user editable portions of the function-plotter. The `ace-builds` folder must be
 in the `Common` folder in this project. The repository for `ace-builds` is at
