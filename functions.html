@@ -3,6 +3,7 @@
 <head>
   <title>Function Plotter</title></title>
   <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
   <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
   <script type = "text/javascript" src = "Common/webgl-utils.js"></script>
@@ -19,12 +20,12 @@
 </style>
 </head>
 <body>
-  <h2>Function Plotter</h2>
   <div style="width: 100%; float: left;">
-   <div id="left-canvas" style="width: 50%; float: left;">
-    <canvas id = "gl-canvas" class = "canv">
+   <div id="left-canvas" style="width: 50%; float: left; padding-left:0.5cm; padding-top:0.3cm">
+    <canvas id = "gl-canvas" class = "canv" style="background-color:#eee">
     Oops ... your browser doesn't support the HTML5 canvas element
     </canvas>
+    <div style="padding-left:0.7cm;">
     To the right are three code editing areas which are pre-filled with some
     default code. All of the code is <tt>GLSL</tt> and is subject to its
     restrictions. Of particular note, in most cases, there is no automatic
@@ -125,10 +126,12 @@ float julia( float x, float y ) {
 }
     </pre>
     </div>
-    <div id="instructions" style="width: 40%; float: right;">
+    </div>
+    <div id="instructions" style="width: 40%; float: right; padding-right:1.3cm;">
+      <h2>Function Plotter</h2>
       <h4>Works best in Chrome! (there are known issues with Firefox)</h4>
-      <h4>Please review the <a href="README.html">README</a> for detailed documentation</h4>
-      Feel Free to modify the <span style="background: lightgreen; border: 2px solid gray; font-family: monospace">getcolor()</span>
+      <h4>Please review the <a href="index.html">README</a> for detailed documentation</h4>
+      Feel Free to modify the <code>getcolor()</code>
       function (just don't change it's name)
       <pre class="editor" id="clr_input" style="height: 200px">
 vec4 getcolor(float z)
@@ -139,22 +142,21 @@ vec4 getcolor(float z)
   return vec4(r, g, b, 1.0);
 }</pre>
       <p></p>
-      Helper function(s) ( <span style="background: PapayaWhip ; fon-family: monospace;border: 2px solid lightgrey;">optional</span> -- just remember to use glsl syntax ...):
+      Helper function(s) ( <span class="comment label label-warning">optional</span> -- just remember to use glsl syntax ...):
       <br><pre class = "editor" id="helper_input" rows="4" cols="80" style="font-family: monospace;">
 //
 //  Write any custom functions here ...
 //
       </pre><br>
-      <span style = "background: Tomato;">Required: </span> Input an expression in terms of
-      <span style="background: Tan; fon-family: monospace;border: 2px solid lightgrey;">x</span> and
-      <span style="background: Tan; fon-family: monospace;border: 2px solid lightgrey;">y</span> e.g.:<pre id="example_input">sin( x*x + y*y )</pre>
+      <span class="comment label label-danger">Required:</span> Input an expression in terms of
+      <code>x</code>> and <code>y</code> e.g.:<pre id="example_input">sin( x*x + y*y )</pre>
       <br><pre class="editor" id="function_input">
 // enter an expression to plot here (or use this example)
 sin( x*x + y*y )
 </pre><br>
       <button onclick="set_function();" > Render2D </button>
       <button onclick="go3D();" > Render3D </button>
-      <button onclick="saveImage(true);" > Save Image </button><br>
+      <!-- <button onclick="saveImage(true);" > Save Image </button>--><br> 
       Current Render mode: <tt><span id="points_mode">Triangle Strip</span></tt><br>
       Current Normalize mode: <tt><span id="normalize_mode">Normalized</span></tt><br>
       <button onclick="togglePoints();" > Toggle Points/Trinagle Strip </button>
@@ -178,10 +180,12 @@ sin( x*x + y*y )
       <p></p>
     </div>
   </div>
+<!--  
 <div id="dialog" title="Save Image">
   <img id="save_img" height="300px" width="300px"></img>
   <p>Right click on the image and select 'save as'. Click the 'X' to close this dialog.</p>
 </div>
+-->
 <script src="Common/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 <script type = "text/javascript" src = "functions.js"></script>
 

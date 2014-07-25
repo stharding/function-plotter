@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>3d-Function-Plotter Documentation</title>
+<link rel="stylesheet" href="https://stackedit.io/res-min/themes/base.css" />
+<script type="text/javascript" src="https://stackedit.io/libs/MathJax/MathJax.js?config=TeX-AMS_HTML"></script>
+</head>
+<body><div class="container"><p><h1>3D-Function-plotter</h1>
+<h3>Contents:</h3></p>
+
+<p><div class="toc">
+<ul>
+<li><a href="#live-demo">Live Demo</a></li>
+<li><a href="#function-plotter-documentation">Function Plotter Documentation</a><ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#overview">Overview</a><ul>
+<li><a href="#2d-mode">2D Mode:</a></li>
+<li><a href="#3d-mode">3D Mode:</a></li>
+</ul>
+</li>
+<li><a href="#usage">Usage</a><ul>
+<li><a href="#color-function">Color function:</a></li>
+<li><a href="#helper-functions">Helper function(s):</a></li>
+<li><a href="#expression-editor">Expression Editor:</a></li>
+</ul>
+</li>
+<li><a href="#how-it-works">How it works:</a><ul>
+<li><a href="#2d-mode-1">2D mode:</a></li>
+<li><a href="#3d-mode-1">3D mode:</a></li>
+</ul>
+</li>
+<li><a href="#examples">Examples:</a><ul>
+<li><a href="#helper-functions-1">Helper Functions:</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</p>
+
+<h1 id="live-demo"><a href="http://cs.unm.edu/~stharding/function-plotter/functions.html">Live Demo</a></h1>
+
+<h1 id="function-plotter-documentation">Function Plotter Documentation</h1>
+
+<h2 id="requirements">Requirements</h2>
+
+<p>This project is only tested in chrome! There are known issues with Firefox.</p>
+
+<p>This project uses the <a href="http://ace.c9.io/#nav=about">Ace</a> project for the
+user editable portions of the function-plotter. The <code>ace-builds</code> folder must be
+in the <code>Common</code> folder in this project. The repository for <code>ace-builds</code> is at
+<a href="https://github.com/ajaxorg/ace-builds.git">https://github.com/ajaxorg/ace-builds.git</a></p>
+
+<h2 id="overview">Overview</h2>
+
+<p>The function plotter plots functions of the form <code>z = f(x, y)</code>.
+The plotter has two fundamental modes: 2d mode and 3d mode.
+<a href="http://www.cs.unm.edu/~stharding/function-plotter/functions.html">Try it for yourself</a></p>
+
+<h3 id="2d-mode">2D Mode:</h3>
+
+<p>In 2d mode, the <code>z = f(x, y)</code> function is rendered using a (user definable)
+color map which depends on the <code>z</code> value of the function, and the <code>x</code> and <code>y</code>
+values are based on the <code>(x, y)</code> pixel coordinates of the canvas.</p>
+
+<p>The user is free to explore the function in many ways in 2d mode. The domain
+of the function can be changed by panning/zooming with the mouse. Clicking
+and dragging will pan the plot view and the mouse wheel will change the scale
+of the plot (effecting either a zoom in or out depending on the direction of
+the wheel movement). If preferred, panning and zooming can be accomplished via
+the arrow keys on the keyboard. (hold the shift key for zooming.) The user can
+tweak the RGB color mapping by editing the color function on the page. Most
+importantly, the user can edit the function to be plotted.</p>
+
+<h3 id="3d-mode">3D Mode:</h3>
+
+<p>In 3d mode, the user can no longer change the color mapping or the expression
+to be evaluated (all such edits should be completed in 2d mode). Instead, the
+user is free to explore the plotted function in other ways. In 3d mode, clicking
+and dragging the mouse will rotate the plotted function in 3d space. The mouse
+wheel zooms into or out of the 3d plot.</p>
+
+<h2 id="usage">Usage</h2>
+
+<p>The plotter consists primarily of a canvas area, a color function
+editor, a helper function editor, and an expression editor.</p>
+
+<p><strong>NOTE</strong>: Each of the editable areas will end up modifying the fragment shader.
+As such, all of the <code>GLSL</code> language is available to implement these functions.
+On the other hand, the user is also limited by the <code>GLSL</code> language
+peculiarities. For example, <code>GLSL</code> provides no implicit casting of numeric
+literals. e.g. the following expression will cause a compilation error:
+<code>1 + 1.0</code>! Since almost all of the built-in <code>GLSL</code> functions take <code>float</code> typed
+input, it is probably best to avoid <code>int</code> variables and integer constants.</p>
+
+<h3 id="color-function">Color function:</h3>
+
+<p>A <code>GLSL</code> function named <code>getcolor()</code> must be defined. The following definition
+is provided as a default:</p>
+
+<pre class="prettyprint prettyprinted"><code class="language-java"><span class="pln">vec4 getcolor</span><span class="pun">(</span><span class="kwd">float</span><span class="pln"> z</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> r </span><span class="pun">=</span><span class="pln"> z </span><span class="pun">+</span><span class="pln"> z </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">z </span><span class="pun">+</span><span class="pln"> z</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> z </span><span class="pun">+</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> g </span><span class="pun">=</span><span class="pln"> z     </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">z </span><span class="pun">*</span><span class="pln"> z</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> b </span><span class="pun">=</span><span class="pln"> z     </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln">  z      </span><span class="pun">:</span><span class="pln"> z </span><span class="pun">*</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> vec4</span><span class="pun">(</span><span class="pln">r</span><span class="pun">,</span><span class="pln"> g</span><span class="pun">,</span><span class="pln"> b</span><span class="pun">,</span><span class="pln"> </span><span class="lit">1.0</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<h3 id="helper-functions">Helper function(s):</h3>
+
+<p>An editor is provided so that the user can implement any helper functions they
+would like for use in the expression evaluator area. This allows for the use
+of functions above and beyond the built-in <code>GLSL</code> functions. See the example
+section for some interesting uses of the helper function editor.</p>
+
+<p><strong>Note:</strong> Any global variables declared in this box will be in scope for both
+both the color function editor and the expression editor.</p>
+
+<h3 id="expression-editor">Expression Editor:</h3>
+
+<p>An editor box is provided so the user can input an expression to be plotted.
+The expression <em>must</em> be in terms of the (internally declared) variables <code>x</code>
+and <code>y</code>. A default expression is provided:</p>
+
+<pre class="prettyprint prettyprinted"><code class="language-java"><span class="pln">sin</span><span class="pun">(</span><span class="pln"> x</span><span class="pun">*</span><span class="pln">x </span><span class="pun">+</span><span class="pln"> y</span><span class="pun">*</span><span class="pln">y </span><span class="pun">)</span></code></pre>
+
+<p>However, the user is encouraged to change this expression and plot more
+interesting functions.</p>
+
+<h2 id="how-it-works">How it works:</h2>
+
+<h3 id="2d-mode-1">2D mode:</h3>
+
+<p>In 2D mode, the plotter is pretty straightforward. When the user hits the
+<code>Render2D</code> button, the fragment shader is recompiled (or compiled for the first
+time if this is the first time the button has been pressed) with <code>getcolor()</code>,
+any helper functions the user has entered in the helper function editor,
+the expression entered into the expression editor, and a bunch of code that
+the user is not exposed to. Essentially what is happening is that the
+<code>gl_FragCoord.x</code> and <code>gl_FragCoord.y</code> coordinates are translated into a
+user-specified range (e.g. mouse manipulation of the plot) and the translated
+<code>x</code> and <code>y</code> values are evaluated in the user supplied expression. The resultant
+<code>z</code> value is passed to the <code>getcolor()</code> function which returns a <code>vec4</code>. The
+<code>vec4</code> is interpreted as a color which the fragment shader uses to set
+<code>gl_FragColor</code>.</p>
+
+<p>Since all of the important computation is done on the fragment shader the
+rendering is real-time for most reasonable functions.</p>
+
+<h3 id="3d-mode-1">3D mode:</h3>
+
+<p>Once the mode has completely transitioned to 3D, the plotter is trivially
+straightforward. The freedom to change the domain of the function and its
+color mapping is disabled. In 3D mode the function is plotted as a 3-dimensional
+surface. Instead of changing the domain (by panning and zooming) dragging the
+mouse rotates the function plot about the appropriate axis. If the shift key is
+depressed, dragging up and down will move the plot up and down in the view.
+Dragging left or right with the shift key depressed will rotate the function
+plot about the z-azis (from the point of view of the camera). The mouse wheel
+will move the camera closer or farther away from the plot.</p>
+
+<p>The transition from 2D mode to 3D mode takes several steps to complete.
+First, the canvas is resized to 512x512 and re-rendered in 2D mode. An image
+of the canvas is saved for later use as a texture map for shading.</p>
+
+<p>Next, the shader is recompiled with an alternate version of <code>getcolor()</code> which
+encodes the floating point value <code>z</code> into a <code>vec4</code> of 4 bytes. (*Note: I did not
+write the code that does this. It came from this
+<a href="http://stackoverflow.com/questions/17981163/webgl-read-pixels-from-floating-point-render-target">StackOverflow answer</a>*.)
+The canvas is re-rendered with this special version of <code>getcolor()</code> and the
+javascript application makes a call to <code>gl.readPixels()</code> and makes a new
+<code>Float32Array</code> with the buffer data to extract the float values.</p>
+
+<p>Using a simple transformation to convert the <code>x</code> and <code>y</code> function coordinates
+into clip coordinates, the application generates two 512x512 array of vertices.
+In both of the arrays the <code>x, y</code> part of the vertex is drawn from the
+transformed <code>x</code> and <code>y</code> function coordinates. In one of the arrays, the <code>z</code>
+value is the unchanged function output and in the other array, the <code>z</code> value
+takes the function output and transforms it into the range <code>[-1, 1]</code>.</p>
+
+<p>In both cases, <code>NaN</code> and <code>Infinity</code> are handled (since these are not
+appropriate vertex position values) by copying the nearest finite value in the
+array.</p>
+
+<p>Even though there are 262,144 vertices in the scene, the points are sent to the
+graphics card only once and as a result, the manipulation of the plotted
+function is real-time for any computer with a modern graphics card.</p>
+
+<h2 id="examples">Examples:</h2>
+
+<p>The default function <code>sin( x*x + y*y )</code> with the default color mapping and
+bounding box looks like this in 2D mode:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/2d-sin.png" alt="2d-sin" title="2d-sin"></p>
+
+<p>Rendered in 3D (with a small zoom out and rotation):</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/3d-sin.png" alt="3d-sin" title="3d-sin"></p>
+
+<p>In 3D mode with ‘Points mode’ on:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/3d-sin-points.png" alt="3d-sin-points" title="3d-sin-points"></p>
+
+<p>Some functions have interesting behavior at large scales. Consider this
+function: <code>sin( x*x + y*y )*1.0/tan(x*y+x*y)</code></p>
+
+<p>At a small scale it looks like this:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan.png" alt="sin-tan" title=""></p>
+
+<p>But at large scale it looks like this (the bounding box is approximately
+-75,000 to 75,000):</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan-big.png" alt="sin-tan" title=""></p>
+
+<p>It gets even more interesting when plotted in 3D with normalization turned off
+and points mode on. When we rotate the plot, we see what appear to be regular
+layers of points that have roughly equal values:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan-3d.png" alt="sin-tan" title=""></p>
+
+<h3 id="helper-functions-1">Helper Functions:</h3>
+
+<p>The utility of the function plotter is greatly expanded by the ability to
+define custom functions which can be called by the expression evaluator.</p>
+
+<p>Functions which do not have a closed form or are otherwise best suited to
+iterative (or approximate) evaluation can be plotted by defining a helper
+function and calling it in the expression editor.</p>
+
+<p>An excellent example of a function which does not have a closed form is the
+<a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot Set</a></p>
+
+<p>The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot Set</a> is defined as the
+set of points <code>Z</code> which satisfy the condition that the expression
+<img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand_formula.png" height="13pt"> 
+is bounded, for all points in the complex plane. To actually know
+if a point is in the set or not, we would have to do an infinite number of iterations
+for every point!</p>
+
+<p>Since that is not possible, the best we can do is do a finite number of
+iterations and if a complex number <code>c = x + iy</code> makes
+<img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand_formula.png" height="13pt">
+less than some finite bound (4 turns out to be a suitable bound) we declare it to
+be in the set.</p>
+
+<p>If we interpret pixel locations on the canvas to be points in the complex plane
+we can plot an approximation of the
+<a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot Set</a>. Furthermore,
+if we color each pixel based on the number of iterations it took to exclude it
+from the set, a very interesting image is generated–especially if we zoom in
+on parts of the image.</p>
+
+<p>Here is some code to put into the helper function code editor to render the
+Mandelbrot:</p>
+
+<pre class="prettyprint prettyprinted"><code class="language-java"><span class="kwd">const</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> max </span><span class="pun">=</span><span class="pln"> </span><span class="lit">100.0</span><span class="pun">;</span><span class="pln">
+</span><span class="kwd">float</span><span class="pln"> mandelbrot</span><span class="pun">(</span><span class="kwd">float</span><span class="pln"> fx</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> fy</span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> iteration  </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> x          </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> y          </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> xtemp      </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln">
+
+  </span><span class="kwd">for</span><span class="pln"> </span><span class="pun">(</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> max</span><span class="pun">;</span><span class="pln"> </span><span class="pun">++</span><span class="pln">i  </span><span class="pun">)</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln"> sqrt</span><span class="pun">(</span><span class="pln">x </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">+</span><span class="pln"> y </span><span class="pun">*</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">&lt;=</span><span class="pln"> </span><span class="lit">4.0</span><span class="pln"> </span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+      xtemp </span><span class="pun">=</span><span class="pln"> x </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">-</span><span class="pln"> y </span><span class="pun">*</span><span class="pln"> y </span><span class="pun">+</span><span class="pln"> fx</span><span class="pun">;</span><span class="pln">
+      y </span><span class="pun">=</span><span class="pln"> </span><span class="lit">2.0</span><span class="pln"> </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">*</span><span class="pln"> y </span><span class="pun">+</span><span class="pln"> fy</span><span class="pun">;</span><span class="pln">
+      x </span><span class="pun">=</span><span class="pln"> xtemp</span><span class="pun">;</span><span class="pln">
+      iteration </span><span class="pun">=</span><span class="pln"> i</span><span class="pun">;</span><span class="pln">
+    </span><span class="pun">}</span><span class="pln">
+    </span><span class="kwd">else</span><span class="pun">{</span><span class="pln"> </span><span class="kwd">break</span><span class="pun">;</span><span class="pln"> </span><span class="pun">}</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> iteration</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>We will also need to modify the color function a little:</p>
+
+<pre class="prettyprint prettyprinted"><code class="language-java"><span class="pln">vec4 getcolor</span><span class="pun">(</span><span class="kwd">float</span><span class="pln"> z</span><span class="pun">)</span><span class="pln">
+</span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">if</span><span class="pln"> </span><span class="pun">(</span><span class="pln">z </span><span class="pun">==</span><span class="pln"> max </span><span class="pun">-</span><span class="pln"> </span><span class="lit">1.0</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">return</span><span class="pln"> vec4</span><span class="pun">(</span><span class="lit">0</span><span class="pun">,</span><span class="lit">0</span><span class="pun">,</span><span class="lit">0</span><span class="pun">,</span><span class="lit">1</span><span class="pun">);</span><span class="pln">
+  z</span><span class="pun">/=</span><span class="pln">max</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> r </span><span class="pun">=</span><span class="pln"> z </span><span class="pun">+</span><span class="pln"> z </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">z </span><span class="pun">+</span><span class="pln"> z</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> z </span><span class="pun">+</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> g </span><span class="pun">=</span><span class="pln"> z     </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> </span><span class="pun">(</span><span class="pln">z </span><span class="pun">*</span><span class="pln"> z</span><span class="pun">)</span><span class="pln"> </span><span class="pun">:</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> b </span><span class="pun">=</span><span class="pln"> z     </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">?</span><span class="pln"> </span><span class="lit">1.0</span><span class="pln"> </span><span class="pun">/</span><span class="pln"> z       </span><span class="pun">:</span><span class="pln"> z </span><span class="pun">*</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> vec4</span><span class="pun">(</span><span class="pln">r</span><span class="pun">,</span><span class="pln"> g</span><span class="pun">,</span><span class="pln"> b</span><span class="pun">,</span><span class="pln"> </span><span class="lit">1.0</span><span class="pun">);</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>Now just enter <code>mandelbrot(x, y)</code> in the expression evaluator and click the
+<code>Render2D</code> button.</p>
+
+<p>Here is the rendering of the set that you get:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand.png" alt="Mandelbrot" title=""></p>
+
+<p>If we zoom in a bit on one of the interior edges and change <code>max</code> to 700.0 we
+can see some nice detail:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand-zoom.png" alt="Mandelbrot" title=""></p>
+
+<p>If we transition to 3D mode and tilt the plot a bit we can see the rate at
+which points were eliminated from the set by their elevation:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand-3d-tri.png" alt="Mandelbrot" title=""></p>
+
+<p>This effect can perhaps more easily be seen if we switch to points mode:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand-3d-pnt.png" alt="Mandelbrot" title=""></p>
+
+<p>Another example of an interesting non-closed form function is the
+<a href="http://en.wikipedia.org/wiki/Julia_set">Julia Set</a> which is similar to the
+Mandelbrot Set. If we use this code in the helper function editor:</p>
+
+<pre class="prettyprint prettyprinted"><code class="language-java"><span class="kwd">const</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> max </span><span class="pun">=</span><span class="pln"> </span><span class="lit">100.0</span><span class="pun">;</span><span class="pln">
+</span><span class="kwd">float</span><span class="pln"> julia</span><span class="pun">(</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> x</span><span class="pun">,</span><span class="pln"> </span><span class="kwd">float</span><span class="pln"> y </span><span class="pun">)</span><span class="pln"> </span><span class="pun">{</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> cRe </span><span class="pun">=</span><span class="pln"> </span><span class="pun">-</span><span class="lit">0.7</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> cIm </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.27015</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> z </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">float</span><span class="pln"> xtemp</span><span class="pun">;</span><span class="pln">
+  </span><span class="kwd">for</span><span class="pun">(</span><span class="kwd">float</span><span class="pln"> i </span><span class="pun">=</span><span class="pln"> </span><span class="lit">0.0</span><span class="pun">;</span><span class="pln"> i </span><span class="pun">&lt;</span><span class="pln"> max</span><span class="pun">;</span><span class="pln"> i</span><span class="pun">++)</span><span class="pln">
+  </span><span class="pun">{</span><span class="pln">
+    xtemp </span><span class="pun">=</span><span class="pln"> x </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">-</span><span class="pln"> y </span><span class="pun">*</span><span class="pln"> y </span><span class="pun">+</span><span class="pln"> cRe</span><span class="pun">;</span><span class="pln">
+    y </span><span class="pun">=</span><span class="pln"> </span><span class="lit">2.0</span><span class="pln"> </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">*</span><span class="pln"> y </span><span class="pun">+</span><span class="pln"> cIm</span><span class="pun">;</span><span class="pln">
+    x </span><span class="pun">=</span><span class="pln"> xtemp</span><span class="pun">;</span><span class="pln">
+    </span><span class="kwd">if</span><span class="pun">((</span><span class="pln">x </span><span class="pun">*</span><span class="pln"> x </span><span class="pun">+</span><span class="pln"> y </span><span class="pun">*</span><span class="pln"> y</span><span class="pun">)</span><span class="pln"> </span><span class="pun">&gt;</span><span class="pln"> </span><span class="lit">4.0</span><span class="pun">)</span><span class="pln"> </span><span class="kwd">break</span><span class="pun">;</span><span class="pln">
+    z </span><span class="pun">=</span><span class="pln"> i</span><span class="pun">;</span><span class="pln">
+  </span><span class="pun">}</span><span class="pln">
+  </span><span class="kwd">return</span><span class="pln"> z</span><span class="pun">;</span><span class="pln">
+</span><span class="pun">}</span></code></pre>
+
+<p>we get this rendering (using the same <code>getcolor()</code> function and entering
+<code>julia(x, y)</code> in the expression editor):</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/julia.png" alt="julia" title=""></p>
+
+<p>Zooming in and bumping up <code>max</code> to 2000.0 we get:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/julia-zoom.png" alt="julia" title=""></p>
+
+<p>Going 3D (with some rotations and zooming):</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/julia-3d-tri.png" alt="julia" title=""></p>
+
+<p>In points mode:</p>
+
+<p><img src="http://www.cs.unm.edu/~stharding/function-plotter/img/julia-3d-pnt.png" alt="julia" title=""></p>
+
+<p>Feel free to contact me with questions/issues at stharding at gmail dot com</p></div></body>
+</html>
