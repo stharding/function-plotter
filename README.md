@@ -1,7 +1,5 @@
 # 3D-WegGL-Function-plotter [Live Demo][1] #
 
---------------------------------------
-
 # Documentation: #
 
 ## Requirements ##
