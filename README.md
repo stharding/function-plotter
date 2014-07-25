@@ -1,6 +1,10 @@
-## Function Plotter Documentation ##
+# 3D-WegGL-Function-plotter [Live Demo][1] #
 
-### Requirements ###
+--------------------------------------
+
+# Documentation: #
+
+## Requirements ##
 
 This project is only tested in chrome! There are known issues with Firefox.
 
@@ -9,13 +13,13 @@ user editable portions of the function-plotter. The `ace-builds` folder must be
 in the `Common` folder in this project. The repository for `ace-builds` is at
 https://github.com/ajaxorg/ace-builds.git
 
-### Overview ###
+## Overview ##
 
 The function plotter plots functions of the form `z = f(x, y)`.
 The plotter has two fundamental modes: 2d mode and 3d mode.
 [Try it for yourself](http://www.cs.unm.edu/~stharding/function-plotter/functions.html)
 
-##### 2D Mode: #####
+### 2D Mode: ###
 
 In 2d mode, the `z = f(x, y)` function is rendered using a (user definable)
 color map which depends on the `z` value of the function, and the `x` and `y`
@@ -30,7 +34,7 @@ the arrow keys on the keyboard. (hold the shift key for zooming.) The user can
 tweak the RGB color mapping by editing the color function on the page. Most
 importantly, the user can edit the function to be plotted.
 
-##### 3D Mode: #####
+### 3D Mode: ###
 
 In 3d mode, the user can no longer change the color mapping or the expression
 to be evaluated (all such edits should be completed in 2d mode). Instead, the
@@ -38,7 +42,7 @@ user is free to explore the plotted function in other ways. In 3d mode, clicking
 and dragging the mouse will rotate the plotted function in 3d space. The mouse
 wheel zooms into or out of the 3d plot.
 
-### Usage ###
+## Usage ##
 
 The plotter consists primarily of a canvas area, a color function
 editor, a helper function editor, and an expression editor.
@@ -52,7 +56,7 @@ literals. e.g. the following expression will cause a compilation error:
 input, it is probably best to avoid `int` variables and integer constants.
 
 
-##### Color function: #####
+### Color function: ###
 
 A `GLSL` function named `getcolor()` must be defined. The following definition
 is provided as a default:
@@ -66,7 +70,7 @@ vec4 getcolor(float z)
   return vec4(r, g, b, 1.0);
 }
 ```
-##### Helper function(s): #####
+### Helper function(s): ###
 
 An editor is provided so that the user can implement any helper functions they
 would like for use in the expression evaluator area. This allows for the use
@@ -76,7 +80,7 @@ section for some interesting uses of the helper function editor.
 **Note:** Any global variables declared in this box will be in scope for both
 both the color function editor and the expression editor.
 
-##### Expression Editor: #####
+### Expression Editor: ###
 
 An editor box is provided so the user can input an expression to be plotted.
 The expression _must_ be in terms of the (internally declared) variables `x`
@@ -87,9 +91,9 @@ sin( x*x + y*y )
 However, the user is encouraged to change this expression and plot more
 interesting functions.
 
-### How it works: ###
+## How it works: ##
 
-##### 2D: #####
+### 2D mode: ###
 
 In 2D mode, the plotter is pretty straightforward. When the user hits the
 `Render2D` button, the fragment shader is recompiled (or compiled for the first
@@ -107,7 +111,7 @@ user-specified range (e.g. mouse manipulation of the plot) and the translated
 Since all of the important computation is done on the fragment shader the
 rendering is real-time for most reasonable functions.
 
-##### 3D: #####
+### 3D mode: ###
 
 Once the mode has completely transitioned to 3D, the plotter is trivially
 straightforward. The freedom to change the domain of the function and its
@@ -146,40 +150,40 @@ Even though there are 262,144 vertices in the scene, the points are sent to the
 graphics card only once and as a result, the manipulation of the plotted
 function is real-time for any computer with a modern graphics card.
 
-### Examples: ###
+## Examples: ##
 
 The default function `sin( x*x + y*y )` with the default color mapping and
 bounding box looks like this in 2D mode:
 
-![2d-sin](img/2d-sin.png "2d-sin")
+![2d-sin](http://www.cs.unm.edu/~stharding/function-plotter/img/2d-sin.png "2d-sin")
 
 Rendered in 3D (with a small zoom out and rotation):
 
-![3d-sin](img/3d-sin.png "3d-sin")
+![3d-sin](http://www.cs.unm.edu/~stharding/function-plotter/img/3d-sin.png "3d-sin")
 
 In 3D mode with 'Points mode' on:
 
-![3d-sin-points](img/3d-sin-points.png "3d-sin-points")
+![3d-sin-points](http://www.cs.unm.edu/~stharding/function-plotter/img/3d-sin-points.png "3d-sin-points")
 
 Some functions have interesting behavior at large scales. Consider this
 function: `sin( x*x + y*y )*1.0/tan(x*y+x*y)`
 
 At a small scale it looks like this:
 
-![sin-tan](img/sin-tan.png)
+![sin-tan](http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan.png)
 
 But at large scale it looks like this (the bounding box is approximately
 -75,000 to 75,000):
 
-![sin-tan](img/sin-tan-big.png)
+![sin-tan](http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan-big.png)
 
 It gets even more interesting when plotted in 3D with normalization turned off
 and points mode on. When we rotate the plot, we see what appear to be regular
 layers of points that have roughly equal values:
 
-![sin-tan](img/sin-tan-3d.png)
+![sin-tan](http://www.cs.unm.edu/~stharding/function-plotter/img/sin-tan-3d.png)
 
-#### Helper Functions: ####
+### Helper Functions: ###
 
 The utility of the function plotter is greatly expanded by the ability to
 define custom functions which can be called by the expression evaluator.
@@ -191,16 +195,18 @@ function and calling it in the expression editor.
 An excellent example of a function which does not have a closed form is the
 [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
 
-The [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set)
-is defined as the set of points `Z` which satisfy the condition that the
-expression <img src="img/mand_formula.png" height=13pt></img> is bounded, for
-all points in the complex plane. To actually know if a point is in the set
-or not, we would have to do an infinite number of iterations for every point!
+The [Mandelbrot Set](http://en.wikipedia.org/wiki/Mandelbrot_set) is defined as the
+set of points `Z` which satisfy the condition that the expression
+<img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand_formula.png" height=13pt></img> 
+is bounded, for all points in the complex plane. To actually know
+if a point is in the set or not, we would have to do an infinite number of iterations
+for every point!
 
 Since that is not possible, the best we can do is do a finite number of
 iterations and if a complex number `c = x + iy` makes
-<img src="img/mand_formula.png" height=13pt></img>  less than some finite
-bound (4 turns out to be a suitable bound) we declare it to be in the set.
+<img src="http://www.cs.unm.edu/~stharding/function-plotter/img/mand_formula.png" height=13pt></img>
+less than some finite bound (4 turns out to be a suitable bound) we declare it to
+be in the set.
 
 If we interpret pixel locations on the canvas to be points in the complex plane
 we can plot an approximation of the
@@ -251,21 +257,22 @@ Now just enter `mandelbrot(x, y)` in the expression evaluator and click the
 
 Here is the rendering of the set that you get:
 
-![Mandelbrot](img/mand.png)
+
+![Mandelbrot](http://www.cs.unm.edu/~stharding/function-plotter/img/mand.png)
 
 If we zoom in a bit on one of the interior edges and change `max` to 700.0 we
 can see some nice detail:
 
-![Mandelbrot](img/mand-zoom.png)
+![Mandelbrot](http://www.cs.unm.edu/~stharding/function-plotter/img/mand-zoom.png)
 
 If we transition to 3D mode and tilt the plot a bit we can see the rate at
 which points were eliminated from the set by their elevation:
 
-![Mandelbrot](img/mand-3d-tri.png)
+![Mandelbrot](http://www.cs.unm.edu/~stharding/function-plotter/img/mand-3d-tri.png)
 
 This effect can perhaps more easily be seen if we switch to points mode:
 
-![Mandelbrot](img/mand-3d-pnt.png)
+![Mandelbrot](http://www.cs.unm.edu/~stharding/function-plotter/img/mand-3d-pnt.png)
 
 Another example of an interesting non-closed form function is the
 [Julia Set](http://en.wikipedia.org/wiki/Julia_set) which is similar to the
@@ -293,18 +300,21 @@ float julia( float x, float y ) {
 we get this rendering (using the same `getcolor()` function and entering
 `julia(x, y)` in the expression editor):
 
-![julia](img/julia.png)
+![julia](http://www.cs.unm.edu/~stharding/function-plotter/img/julia.png)
 
 Zooming in and bumping up `max` to 2000.0 we get:
 
-![julia](img/julia-zoom.png)
+![julia](http://www.cs.unm.edu/~stharding/function-plotter/img/julia-zoom.png)
 
 Going 3D (with some rotations and zooming):
 
-![julia](img/julia-3d-tri.png)
+![julia](http://www.cs.unm.edu/~stharding/function-plotter/img/julia-3d-tri.png)
 
 In points mode:
 
-![julia](img/julia-3d-pnt.png)
+![julia](http://www.cs.unm.edu/~stharding/function-plotter/img/julia-3d-pnt.png)
 
 Feel free to contact me with questions/issues at stharding at gmail dot com
+
+
+  [1]: http://cs.unm.edu/~stharding/function-plotter/functions.html
