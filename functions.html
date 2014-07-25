@@ -27,11 +27,11 @@
     </canvas>
     <div style="padding-left:0.7cm;">
     To the right are three code editing areas which are pre-filled with some
-    default code. All of the code is <tt>GLSL</tt> and is subject to its
+    default code. All of the code is <code>GLSL</code> and is subject to its
     restrictions. Of particular note, in most cases, there is no automatic
     conversion between integers and floats. For example, the expression
-    <tt>1 + 2.0</tt> will not compile:  since the literal <tt>1</tt> is an
-    integer and the literal <tt>2.0</tt> is a float. <p></p>
+    <code>1 + 2.0</code> will not compile:  since the literal <code>1</code> is an
+    integer and the literal <code>2.0</code> is a float. <p></p>
 
     The function plotter has two distinct modes of operation: 2d mode and 3d
     mode. <p></p>
@@ -39,7 +39,7 @@
     In 2d mode, the user specified function of x and y will be plotted. The
     output value of the function is output as a 'heat map'. Specifically, the
 
-    (user modifiable) <tt>getcolor()</tt> function determines the color for a
+    (user modifiable) <code>getcolor()</code> function determines the color for a
     z-value. The user can use the mouse wheel to 'zoom' in and out and click
     and drag to pan and zoom (this is nothing  more than specifying the dom
     in
@@ -71,9 +71,9 @@
     given input. This means that you cannot plot spheres or cubes etc. To
     demonstrate the versatility of this plotter, the following code is
     provided to plot the mandelbrot set and the julia set. Just copy and paste
-    the <tt>getcolor()</tt> function into the color function area and the <tt>
-    mandelbrot()</tt> or <tt>julia()</tt> into the helper function area. Then
-    put <tt>mandelbrot(x,y)</tt> into the expression area.
+    the <code>getcolor()</code> function into the color function area and the <code>
+    mandelbrot()</code> or <code>julia()</code> into the helper function area. Then
+    put <code>mandelbrot(x,y)</code> into the expression area.
 
 
     <p></p>
@@ -157,8 +157,8 @@ sin( x*x + y*y )
       <button onclick="set_function();" > Render2D </button>
       <button onclick="go3D();" > Render3D </button>
       <!-- <button onclick="saveImage(true);" > Save Image </button>--><br> 
-      Current Render mode: <tt><span id="points_mode">Triangle Strip</span></tt><br>
-      Current Normalize mode: <tt><span id="normalize_mode">Normalized</span></tt><br>
+      Current Render mode: <code><span id="points_mode">Triangle Strip</span></code><br>
+      Current Normalize mode: <code><span id="normalize_mode">Normalized</span></code><br>
       <button onclick="togglePoints();" > Toggle Points/Trinagle Strip </button>
       <button onclick="toggleNormalize();" > Toggle Normalization </button><br><br>
 

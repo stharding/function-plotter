@@ -105,21 +105,21 @@ function init()
     fn_input = document.getElementById( "function_input" );
 
     clr_editor = ace.edit("clr_input");
-    clr_editor.setTheme("ace/theme/solarized_dark");
+    clr_editor.setTheme("ace/theme/dawn");
     clr_editor.getSession().setMode("ace/mode/glsl");
     clr_editor.setOption("maxLines", 105);
 
     expr_editor = ace.edit("function_input");
-    expr_editor.setTheme("ace/theme/solarized_dark");
+    expr_editor.setTheme("ace/theme/dawn");
     expr_editor.getSession().setMode("ace/mode/glsl");
 
     hlpr_editor = ace.edit("helper_input");
-    hlpr_editor.setTheme("ace/theme/solarized_dark");
+    hlpr_editor.setTheme("ace/theme/dawn");
     hlpr_editor.getSession().setMode("ace/mode/glsl");
     hlpr_editor.setOption("maxLines", 105);
 
     example = ace.edit("example");
-    example.setTheme("ace/theme/solarized_dark")
+    example.setTheme("ace/theme/dawn")
     example.getSession().setMode("ace/mode/glsl");
     example.setOption("maxLines", 200);
     example.setReadOnly()
