@@ -195,7 +195,7 @@ function render ()
     }
     else
     {
-      console.log( "waiting on texture ... " );
+      if (debug) console.log( "waiting on texture ... " );
       window.requestAnimFrame( render );
     }
   }
@@ -373,7 +373,7 @@ function updateWorldAlpa( value, axis )
 
 function set_fShader( f_shader_str, compile )
 {
-  console.log( "compiling shaders .. " );
+  if (debug) console.log( "compiling shaders .. " );
   program = initShaders( gl, "vertex.glsl", f_shader_str );
   gl.useProgram( program );
 
@@ -408,7 +408,7 @@ function set_fShader( f_shader_str, compile )
   gl.uniform1f( widthPosition , canvas.width  );
   gl.uniform1i( hslPosition, hslMode );
 
-  console.log( "Shaders done compiling.")
+  if (debug) console.log( "Shaders done compiling.");
 }
 
 function set_function( compile )
@@ -609,8 +609,8 @@ function saveImage( save_local )
         $( "#dialog" ).dialog();
       })
   } else {
-    console.log( "canvas.style.height == " + canvas.style.height )
-    console.log( "canvas.style.width  == " + canvas.style.width  )
+    if (debug) console.log( "canvas.style.height == " + canvas.style.height );
+    if (debug) console.log( "canvas.style.width  == " + canvas.style.width  );
 
     var ch = canvas.style.height;
     var cw = canvas.style.width ;
@@ -635,8 +635,8 @@ function saveImage( save_local )
     }
     canvas.style.height = ch;
     canvas.style.width  = cw;
-    console.log( "canvas.style.height == " + canvas.style.height )
-    console.log( "canvas.style.width  == " + canvas.style.width  )
+    if (debug) console.log( "canvas.style.height == " + canvas.style.height );
+    if (debug) console.log( "canvas.style.width  == " + canvas.style.width  );
 
     canvas.height = h;
     canvas.width  = w;
@@ -647,13 +647,13 @@ function saveImage( save_local )
 
 function go3D()
 {
-  console.log("start 3d setup ...")
+  if (debug) console.log("start 3d setup ...")
 
-  console.log("saving canvas image as texture");
+  if (debug) console.log("saving canvas image as texture");
   saveImage();
-  console.log("done saving canvas.");
+  if (debug) console.log("done saving canvas.");
 
-  console.log("getting function values");
+  if (debug) console.log("getting function values");
   var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + 
                      color_fn_to_float + frag_shader_start_2 + 
                      expr_editor.getValue() + frag_shader_end;
@@ -669,7 +669,7 @@ function getPixels()
   var w = canvas.width;
   canvas.height = canvas.width = width3d;
   gl.viewport( 0, 0, canvas.width, canvas.height );
-  console.log( "Should skip compilation!!")
+  if (debug) console.log( "Should skip compilation!!")
   set_function(false)
 
   data = new Uint8Array( canvas.width * canvas.height * 4 );
@@ -695,16 +695,16 @@ function set3dPoints( data )
   points3d2      = [];
   tex_coords2    = [];
   var l = data.length;
-  console.log( "DATA LENGTH: " + l )
+  if (debug) console.log( "DATA LENGTH: " + l )
 
   for ( var i = 0; i < l; ++i )
     if ( max < Math.abs(data[i]) && isFinite(data[i]) ) max = Math.abs(data[i]);
-  if (max == 0) console.log( "max == " + max + " .... WAT" );
+  if (max == 0 && debug) console.log( "max == " + max + " .... WAT" );
   else {
      if ( !isFinite(data[i]) && i > 0 ) data[i] = data[i-1];
   }
 
-  for ( var i = 0; i <= width3d;   ++i )
+  for ( var i = 0; i <= width3d; ++i )
   {
     points3d2[i]      = [];
     normal_points2[i] = [];
@@ -750,13 +750,13 @@ function set3dPoints( data )
   gl.bindBuffer( gl.ARRAY_BUFFER, tex_coords_buffer );
   gl.bufferData( gl.ARRAY_BUFFER, flatten( tex_coords ), gl.STATIC_DRAW );
 
-  console.log( "3d setup done" );
+  if (debug) console.log( "3d setup done" );
   eye =  vec3(  0.0,  0.0, 11.0 );
   at  =  vec3(  0.0,  0.0, 0.0 );
   pm  = perspective( 10, canvas.width / canvas.height, 0.1, 200 );
   vm  = orig = lookAt( eye, at, up );
   render();
-  console.log( "done with 3d render ");
+  if (debug) console.log( "done with 3d render ");
 }
 
 var all_strips_buffs   = [];
@@ -833,7 +833,7 @@ function configureTexture( image, texture )
   gl.generateMipmap( gl.TEXTURE_2D );
   gl.uniform1i(gl.getUniformLocation(program, "texture"), 0);
   gl.enableVertexAttribArray( tex_coord_loc );
-  console.log( "Texture configuration done." );
+  if (debug) console.log( "Texture configuration done." );
 }
 
 /*
@@ -861,10 +861,10 @@ function clean_data( d )
   for ( var i = 0; i < d.length; ++i )
     if ( !isFinite( d[i] ) )
     {
-      console.log( "bad data at : " + i );
+      if (debug) console.log( "bad data at : " + i );
       return false;
     }
-    console.log("data seems clean");
+    if (debug) console.log("data seems clean");
     return true;
 }
 
