@@ -638,8 +638,6 @@ function getPixels()
   return data;
 }
 
-
-var max = 0;
 function set3dPoints( data )
 {
   points3d       = [];
@@ -648,7 +646,8 @@ function set3dPoints( data )
   tex_coords     = [];
   points3d2      = [];
   tex_coords2    = [];
-  var l = data.length;
+  var max        = 0;
+  var l          = data.length;
   if (debug) console.log( "DATA LENGTH: " + l )
 
   for ( var i = 0; i < l; ++i )
@@ -822,7 +821,7 @@ function clean_data( d )
     return true;
 }
 
-var pm_label          = document.getElementById( "normalize_mode"    );
+var nm_label          = document.getElementById( "normalize_mode"    );
 var point_size_group  = document.getElementById( "point_size_group" );
 var point_size_output = document.getElementById( "point_size_output" );
 var pm_label          = document.getElementById( "points_mode"       );
@@ -839,7 +838,7 @@ function togglePoints()
 function toggleNormalize()
 {
   normalize_mode = !normalize_mode;
-  pm_label.innerHTML = normalize_mode ? "Normalized" : "Not-Normalized";
+  nm_label.innerHTML = normalize_mode ? "Normalized" : "Not-Normalized";
   setPointsBuffData();
   render();
 }
