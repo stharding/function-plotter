@@ -715,8 +715,8 @@ function set3dPoints( data )
     tex_coords2[i]    = []
     for ( var j = 0; j <= width3d; ++j )
     {
-      var z_val      = data[ width3d * i + j ];
-      var z_val_norm = data[ width3d * i + j ] / max;
+      var z_val      = data[ width3d * i + j + (j == width3d ? -1 : 0 )];
+      var z_val_norm = data[ width3d * i + j + (j == width3d ? -1 : 0 )] / max;
 
       points3d.push( vec3(
         affine( 0, j, width3d, -1,  1 ),
@@ -739,12 +739,12 @@ function set3dPoints( data )
         z_val_norm ) );
 
       tex_coords.push( vec2(
-        affine(0, j, width3d, 0, 1),
-        affine(0, i, width3d, 1, 0) ) );
+        affine(0, j == width3d ? 0 : j, width3d, 0, 1),
+        affine(0, i == width3d ? 0 : i, width3d, 1, 0) ) );
 
       tex_coords2[i].push( vec2(
-        affine(0, j, width3d, 0, 1),
-        affine(0, i, width3d, 1, 0) ) );
+        affine(0, j == width3d ? 0 : j, width3d, 0, 1),
+        affine(0, i == width3d ? 0 : i, width3d, 1, 0) ) );
     }
   }
   setup_strips();
