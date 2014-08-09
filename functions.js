@@ -303,8 +303,11 @@ function handle_mouse_move ( e )
     var dx = ox - e.offsetX;
     var dy = e.offsetY - oy;
 
-    cx += 4 * dx / (canvas.width  / scale_x );
-    cy += 4 * dy / (canvas.height / scale_y );
+    if (!mode3d)
+    {
+      cx += 4 * dx / (canvas.width  / scale_x );
+      cy += 4 * dy / (canvas.height / scale_y );
+    }
 
     ox = e.offsetX;
     oy = e.offsetY;
@@ -343,35 +346,6 @@ function handle_mouse_move ( e )
     render();
     return false;
   }
-}
-
-/*
- * Handles the global rotations commanded by the user by sliding the
- * controls under the canvas.
- */
-function updateWorldAlpa( value, axis )
-{
-    switch (axis)
-    {
-        case 'x':
-        var val = value - last_alpha_x;
-        last_alpha_x = value;
-        pm = mult( pm, rotate(val, [1, 0, 0]));
-        break;
-
-        case 'y':
-        var val = value - last_alpha_y;
-        last_alpha_y = value;
-        pm = mult( pm, rotate(val, [0, 1, 0]));
-        break;
-
-        case 'z':
-        var val = value - last_alpha_z.value;
-        last_alpha_z.value = value;
-        pm = mult( pm, rotate(val, [0, 0, 1]));
-        break;
-    }
-    render();
 }
 
 function set_fShader( f_shader_str, compile )
@@ -422,9 +396,8 @@ function set_function( compile )
   mode3d = false;
 
   var cfn = compile ? clr_editor.getValue() : color_fn_to_float;
-  var f_shader = header + hlpr_editor.getValue() + frag_shader_start_1 +
-                 cfn + frag_shader_start_2 + expr_editor.getValue() + 
-                 frag_shader_end;
+  var f_shader = header + hlpr_editor.getValue() + cfn + frag_shader_start +
+                 expr_editor.getValue() + frag_shader_end;
 
   set_fShader( f_shader );
   // Load shaders and initialize attribute buffers
@@ -474,30 +447,8 @@ uniform int       use_tex;                                                   \n\
 uniform sampler2D texture;                                                   \n\
 varying vec2      fTexCoord;                                                 \n\
 ";
-var frag_shader_start_1 = "                                                  \n\
-vec4 hsvToRgb(float h, float s, float v)                                     \n\
-{                                                                            \n\
-    float r, g, b;                                                           \n\
-                                                                             \n\
-    float i = floor(h * 6.0);                                                \n\
-    float f = h * 6.0 - i;                                                   \n\
-    float p = v * (1.0 - s);                                                 \n\
-    float q = v * (1.0 - f * s);                                             \n\
-    float t = v * (1.0 - (1.0 - f) * s);                                     \n\
-    float j = mod(i, 6.0);                                                   \n\
-                                                                             \n\
-    if ( j == 0.0 ) return vec4( v, t, p, 1.0 );                             \n\
-    if ( j == 1.0 ) return vec4( q, v, p, 1.0 );                             \n\
-    if ( j == 2.0 ) return vec4( p, v, t, 1.0 );                             \n\
-    if ( j == 3.0 ) return vec4( p, q, v, 1.0 );                             \n\
-    if ( j == 4.0 ) return vec4( t, p, v, 1.0 );                             \n\
-    if ( j == 5.0 ) return vec4( v, p, q, 1.0 );                             \n\
-                                                                             \n\
-    return vec4( 1.0, 1.0, 1.0, 1.0 );                                       \n\
-}                                                                            \n\
-                                                                             \n\
-";
-var frag_shader_start_2 = "                                                  \n\
+
+var frag_shader_start = "                                                  \n\
 void main()                                                                  \n\
 {                                                                            \n\
   if ( use_tex == 1 ) gl_FragColor = texture2D( texture, fTexCoord );        \n\
@@ -569,7 +520,7 @@ function initShaders(gl, vShaderName, f_shader_str)
     var shader = gl.createShader(type),
         shaderScript = loadFileAJAX(shaderName);
     if (!shaderScript) {
-        alert("Could not find shader source: "+shaderName);
+        alert("Could not find shader source: " + shaderName);
     }
     gl.shaderSource(shader, shaderScript);
     gl.compileShader(shader);
@@ -658,9 +609,8 @@ function go3D()
   if (debug) console.log("done saving canvas.");
 
   if (debug) console.log("getting function values");
-  var f_shader_str = header + hlpr_editor.getValue() + frag_shader_start_1 + 
-                     color_fn_to_float + frag_shader_start_2 + 
-                     expr_editor.getValue() + frag_shader_end;
+  var f_shader_str = header + hlpr_editor.getValue() + color_fn_to_float +
+                     frag_shader_start + expr_editor.getValue() + frag_shader_end;
   set_fShader( f_shader_str );
 
   data = getPixels();
@@ -755,8 +705,8 @@ function set3dPoints( data )
   gl.bufferData( gl.ARRAY_BUFFER, flatten( tex_coords ), gl.STATIC_DRAW );
 
   if (debug) console.log( "3d setup done" );
-  eye =  vec3(  0.0,  0.0, 11.0 );
-  at  =  vec3(  0.0,  0.0, 0.0 );
+  eye =  vec3( 0.0,  0.0, 11.0 );
+  at  =  vec3( 0.0,  0.0, 0.0 );
   pm  = perspective( 10, canvas.width / canvas.height, 0.1, 200 );
   vm  = orig = lookAt( eye, at, up );
   render();
@@ -765,7 +715,7 @@ function set3dPoints( data )
 
 var all_strips_buffs   = [];
 var all_strips         = [];
-var norm_strips        = []
+var norm_strips        = [];
 var strip_coords_buffs = [];
 var strip_coords       = [];
 function setup_strips()
@@ -872,10 +822,16 @@ function clean_data( d )
     return true;
 }
 
+var pm_label          = document.getElementById( "normalize_mode"    );
+var point_size_group  = document.getElementById( "point_size_group" );
+var point_size_output = document.getElementById( "point_size_output" );
+var pm_label          = document.getElementById( "points_mode"       );
+
 function togglePoints()
 {
   points_mode = !points_mode;
-  pm_label = document.getElementById("points_mode");
+  if (!points_mode) point_size_group.hidden = true;
+  else              point_size_group.hidden = false;
   pm_label.innerHTML = points_mode ? "Points" : "Triangle Strip";
   render();
 }
@@ -883,8 +839,15 @@ function togglePoints()
 function toggleNormalize()
 {
   normalize_mode = !normalize_mode;
-  pm_label = document.getElementById("normalize_mode");
   pm_label.innerHTML = normalize_mode ? "Normalized" : "Not-Normalized";
   setPointsBuffData();
   render();
 }
+
+function setPointSize( value )
+{
+  point_size = value / 100.0;
+  point_size_output.innerHTML = point_size;
+  render();
+}
+

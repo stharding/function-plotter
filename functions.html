@@ -159,7 +159,10 @@ sin( x*x + y*y )
       <button onclick="set_function();" > Render2D </button>
       <button onclick="go3D();" > Render3D </button>
       <!-- <button onclick="saveImage(true);" > Save Image </button>--><br> 
-      Current Render mode: <code><span id="points_mode">Triangle Strip</span></code><br>
+      Current Render mode: <code><span id="points_mode">Triangle Strip</span></code>
+      <span id="point_size_group" hidden="true">Point Size: 
+      <input type="range" id="point_size_slider" min="100" max="1000" value="1" oninput="setPointSize(value)">
+      <output id="point_size_output">1.0</output></span><br>
       Current Normalize mode: <code><span id="normalize_mode">Normalized</span></code><br>
       <button onclick="togglePoints();" > Toggle Points/Trinagle Strip </button>
       <button onclick="toggleNormalize();" > Toggle Normalization </button><br><br>
