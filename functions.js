@@ -41,6 +41,8 @@ var canvas,
     normal_points2,
     orig,
     tex_coords,
+    point_size_loc,
+    point_size      = 2.0,
     normalize_mode  = true,
     points_mode     = false,
     done_tex_config = false,
@@ -153,12 +155,13 @@ function set_cxy( min_x, max_x, min_y, max_y )
 
 function render ()
 {
-  gl.clear     ( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
-  gl.uniform1f ( cxPosition      , cx    );
-  gl.uniform1f ( cyPosition      , cy    );
-  gl.uniform1f ( minXposition    , minX  );
-  gl.uniform1f ( maxXposition    , maxX  );
-  gl.uniform1f ( minYposition    , minY  );
+  gl.clear( gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT );
+  gl.uniform1f( cxPosition      , cx         );
+  gl.uniform1f( cyPosition      , cy         );
+  gl.uniform1f( minXposition    , minX       );
+  gl.uniform1f( maxXposition    , maxX       );
+  gl.uniform1f( minYposition    , minY       );
+  gl.uniform1f( point_size_loc  , point_size );
   gl.uniformMatrix4fv( u_vmLoc, false, flatten( vm ) );
   gl.uniformMatrix4fv( u_pmLoc, false, flatten( pm ) );
 
@@ -384,6 +387,7 @@ function set_fShader( f_shader_str, compile )
   tex_coord_loc     = gl.getAttribLocation ( program, "v_TexCoord" );
   u_vmLoc           = gl.getUniformLocation( program, "u_vm"       );
   u_pmLoc           = gl.getUniformLocation( program, "u_pm"       );
+  point_size_loc    = gl.getUniformLocation( program, "point_size" );
   cxPosition        = gl.getUniformLocation( program, "cx"         );
   cyPosition        = gl.getUniformLocation( program, "cy"         );
   minXposition      = gl.getUniformLocation( program, "minX"       );
@@ -585,7 +589,7 @@ function initShaders(gl, vShaderName, f_shader_str)
       alert(gl.getShaderInfoLog(fragmentShader));
       return null;
   }
-  var program        = gl.createProgram();
+  var program = gl.createProgram();
 
   gl.attachShader(program, vertexShader);
   gl.attachShader(program, fragmentShader);
@@ -602,7 +606,7 @@ function saveImage( save_local )
 {
   if( arguments.length == 0 ) save_local = false;
   
-  if ( save_local ){
+  if ( save_local ) {
     var image = document.getElementById( "save_img" );
     image.src = canvas.toDataURL("image/png");
     $(function() {
